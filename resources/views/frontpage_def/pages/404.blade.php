@@ -1,6 +1,6 @@
 @extends('frontpage_master_def')
 
-@section('title', '| Error 404')
+@section('title', '| Not Found 404')
 
 @section('content')
 <div class="breadcrumb-area">
