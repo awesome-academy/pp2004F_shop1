@@ -20,17 +20,19 @@
         <div class="row justify-content-lg-center">
             <div class="col-sm-12 col-md-12 col-xs-12 col-lg-8 mt-30 mb-30">
                 <!-- Login Form s-->
-                <form action="#">
+                <form action="{{ route('login') }}" method="POST">
+                    @csrf
+                    @method('POST')
                     <div class="login-form">
                         <h4 class="login-title">Login</h4>
                         <div class="row">
                             <div class="col-md-12 col-12 mb-20">
                                 <label>Email Address*</label>
-                                <input class="mb-0" type="email" placeholder="Email Address">
+                                <input name="email" class="mb-0" type="email" placeholder="Email Address">
                             </div>
                             <div class="col-12 mb-20">
                                 <label>Password</label>
-                                <input class="mb-0" type="password" placeholder="Password">
+                                <input name="password" class="mb-0" type="password" placeholder="Password">
                             </div>
                             <div class="col-md-8">
                                 <div class="check-box d-inline-block ml-0 ml-md-2 mt-10">

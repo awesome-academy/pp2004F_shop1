@@ -16,30 +16,6 @@
                 <div class="col-lg-9 col-md-8">
                     <div class="header-top-right">
                         <ul class="ht-menu">
-                            <!-- Begin Setting Area -->
-                            <li>
-                                <div class="ht-setting-trigger"><span>Setting</span></div>
-                                <div class="setting ht-setting">
-                                    <ul class="ht-setting-list">
-                                        <li><a href="login-register.html">My Account</a></li>
-                                        <li><a href="checkout.html">Checkout</a></li>
-                                        <li><a href="login-register.html">Sign In</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <!-- Setting Area End Here -->
-                            <!-- Begin Currency Area -->
-                            <li>
-                                <span class="currency-selector-wrapper">Currency :</span>
-                                <div class="ht-currency-trigger"><span>USD $</span></div>
-                                <div class="currency ht-currency">
-                                    <ul class="ht-setting-list">
-                                        <li><a href="#">EUR €</a></li>
-                                        <li class="active"><a href="#">USD $</a></li>
-                                    </ul>
-                                </div>
-                            </li>
-                            <!-- Currency Area End Here -->
                             <!-- Begin Language Area -->
                             <li>
                                 <span class="language-selector-wrapper">Language :</span>
@@ -52,6 +28,32 @@
                                 </div>
                             </li>
                             <!-- Language Area End Here -->
+                            <!-- Begin Setting Area -->
+                            <li>
+                                <div class="ht-setting-trigger"><span>Setting</span></div>
+                                <div class="setting ht-setting">
+                                    <ul class="ht-setting-list">
+                                        <li><a href="login-register.html">My Account</a></li>
+                                        <li><a href="checkout.html">Checkout</a></li>
+                                        @if (Auth::check())
+                                        <li>
+                                        {{-- <form action="{{ route('logout') }}" method="POST">
+                                            @csrf
+                                            @method('POST')
+                                            <button type="submit" class="btn btn-default btn-flat">Sign Out</button>
+                                        </form> --}}
+                                        <a href="{{ route('logout') }}">Sign out</a>
+                                        </li>
+                                        @else
+                                        <li><a href="{{ url('login') }}">Sign In</a></li>
+                                        @endif
+                                    </ul>
+                                </div>
+                            </li>
+                            <!-- Setting Area End Here -->
+                            @if (Auth::check())
+                            <li>{{ Auth::user()->username }}</li>
+                            @endif
                         </ul>
                     </div>
                 </div>

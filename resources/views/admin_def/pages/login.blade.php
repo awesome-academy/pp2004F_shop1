@@ -11,15 +11,32 @@
     <!-- /.login-logo -->
     <div class="login-box-body">
         <h4 class="login-box-msg">Sign in to start your session</h4>
-
-        <form action="../../index2.html" method="post">
-            <div class="form-group has-feedback">
-                <input type="email" class="form-control" placeholder="Email">
-                <i class="fa fa-envelope-o form-control-feedback"></i>
+        @if (session()->has('permission'))
+            <div class="alert alert-warning alert-dismissible" role="alert">
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <strong>Warning!</strong> {{ session()->get('permission') }}.
             </div>
-            <div class="form-group has-feedback">
-                <input type="password" class="form-control" placeholder="Password">
+        @endif
+        <form action="{{ route('admin.login') }}" method="POST">
+            @csrf
+            @method('POST')
+            <div class="form-group has-feedback{{ $errors->has('email') ? ' has-error' : '' }}">
+                <input type="email" name="email" class="form-control" placeholder="Email">
+                <i class="fa fa-envelope-o form-control-feedback"></i>
+                @error('email')
+                    <div class="help-block">
+                        {{ $errors->first('email') }}
+                    </div>
+                @enderror
+            </div>
+            <div class="form-group has-feedback{{ $errors->has('password') ? ' has-error' : '' }}">
+                <input type="password" name="password" class="form-control" placeholder="Password">
                 <i class="fa fa-lock form-control-feedback"></i>
+                @error('password')
+                    <div class="help-block">
+                        {{ $errors->first('password') }}
+                    </div>
+                @enderror
             </div>
             <div class="row">
                 <div class="col-xs-8">

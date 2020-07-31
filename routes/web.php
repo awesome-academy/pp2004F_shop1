@@ -23,11 +23,15 @@ Route::get('cart', 'FrontpageController@cart');
 Route::get('login', 'FrontpageController@login');
 Route::get('register', 'FrontpageController@register');
 Route::get('search', 'FrontpageController@search');
+Route::post('login', 'Auth\LoginController@login')->name('login');
+Route::get('logout', 'Auth\LoginController@logout')->name('logout');
 
 // Admin Route Group
 
-Route::prefix('admin')->as('admin.')->group(function(){
+Route::prefix('admin')->as('admin.')->middleware('auth.admin')->group(function(){
     Route::fallback('AdminController@page404');
     Route::get('login', 'AdminController@login');
+    Route::post('login', 'Auth\LoginController@login')->name('login');
+    Route::post('logout', 'Auth\LoginController@logout')->name('logout');
     Route::get('/', 'AdminController@dashboard');
 });
