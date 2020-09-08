@@ -24,7 +24,7 @@ $factory->define(User::class, function (Faker $faker) {
         'email' => $faker->unique()->safeEmail,
         'password' => \Hash::make('12345678'), // password
         'remember_token' => Str::random(16),
-        'role_id' => $verified = (rand(0, 10) >= 9) ? 0 : 1,
-        'email_verified_at' => $verified ? now() : null,
+        'role_id' => $verified = (rand(0, 10) >= 9) ? 1 : 2,
+        'activated_at' => $verified >= 2 ? now() : null,
     ];
 });

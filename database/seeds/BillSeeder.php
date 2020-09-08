@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Database\Seeder;
+use App\Models\Order;
 
 class BillSeeder extends Seeder
 {
@@ -11,6 +12,14 @@ class BillSeeder extends Seeder
      */
     public function run()
     {
-        factory(App\Models\Bill::class, 30)->create();
+        $orders = Order::where('status', Order::STT['completed'])->get();
+        foreach ($orders as $order) {
+            \DB::table('bills')->insert([
+                'check_number' => uniqid(),
+                'payment_date' => $order->created_at,
+                'amount' => $order->getAmount(),
+                'order_id' => $order->id,
+            ]);
+        }
     }
 }

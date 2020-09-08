@@ -12,37 +12,42 @@ class ProductImageSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $products = \DB::table('products')->pluck('id');
-        $path = public_path('storage/photos/shares');
-        $all = \File::allFiles($path);
-        $files = [];
-        foreach ($all as $file) {
-            if (! \Str::endsWith(dirname($file->getPathName()), 'thumbs')) {
-                array_push($files, $file);
+        $path = public_path('storage/photos/shares/Products');
+        if (file_exists($path) && is_dir($path)) {
+            $all = \File::allFiles($path);
+            if (count($all) > 0) {
+                $files = [];
+                $products = \DB::table('products')->pluck('id');
+
+                foreach ($all as $file) {
+                    if (! \Str::endsWith(dirname($file->getPathName()), 'thumbs')) {
+                        array_push($files, $file);
+                    }
+                }
+                foreach ($products as $product) {
+                    \DB::table('product_images')->insert([
+                        [
+                            'product_id' => $product,
+                            'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
+                        ], [
+                            'product_id' => $product,
+                            'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
+                        ], [
+                            'product_id' => $product,
+                            'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
+                        ], [
+                            'product_id' => $product,
+                            'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
+                        ], [
+                            'product_id' => $product,
+                            'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
+                        ], [
+                            'product_id' => $product,
+                            'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
+                        ],
+                    ]);
+                }
             }
-        }
-        foreach ($products as $product) {
-            \DB::table('product_images')->insert([
-                [
-                    'product_id' => $product,
-                    'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
-                ], [
-                    'product_id' => $product,
-                    'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
-                ], [
-                    'product_id' => $product,
-                    'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
-                ], [
-                    'product_id' => $product,
-                    'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
-                ], [
-                    'product_id' => $product,
-                    'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
-                ], [
-                    'product_id' => $product,
-                    'image' => 'http://localhost:8000/storage/photos/shares/Products/' . $faker->randomElement($files)->getFileName(),
-                ],
-            ]);
-        }
+        } 
     }
 }

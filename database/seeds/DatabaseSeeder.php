@@ -20,6 +20,8 @@ class DatabaseSeeder extends Seeder
             ->call(BillSeeder::class)
             ->call(ProductImageSeeder::class)
             ->call(CommentSeeder::class)
+            ->call(RoleSeeder::class)
+            ->call(PermissionSeeder::class)
             ;
     }
 }
