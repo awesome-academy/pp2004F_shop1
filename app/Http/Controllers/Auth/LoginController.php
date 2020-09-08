@@ -28,7 +28,7 @@ class LoginController extends Controller
      */
     public function redirectPath()
     {
-        return (\Auth::user()->role_id == 2) ? '/admin' : '/';
+        return (\Auth::user()->isAdmin()) ? '/admin' : '/';
     }
 
     /**

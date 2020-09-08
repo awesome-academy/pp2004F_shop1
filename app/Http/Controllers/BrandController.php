@@ -4,7 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Brand;
-use App\Models\Order;
 use App\Models\Product;
 use App\Repositories\Brand\BrandRepositoryInterface;
 
@@ -24,8 +23,13 @@ class BrandController extends Controller
      */
     public function index()
     {
-        $brands = $this->brandRepo->orderBy('id', 'desc')->get();
-        return view('admin_def.pages.brand_index', compact('brands'));
+        $user = \Auth::user();
+        if ($user->can('viewAny', Brand::class)) {
+            $brands = $this->brandRepo->orderBy('id', 'desc')->get();
+            return view('admin_def.pages.brand_index', compact('brands'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -47,10 +51,16 @@ class BrandController extends Controller
     public function store(Request $request)
     {
         try {
-            $request['slug'] = \Str::random(16);
-            $brand = $this->brandRepo->create($request->all());
-            if ($brand->save()) {
-                return redirect()->back();
+            $user = \Auth::user();
+            if ($user->can('create', Brand::class)) {
+                $request['slug'] = \Str::random(16);
+                $brand = $this->brandRepo->create($request->all());
+                if ($brand->save()) {
+                    return redirect()->back();
+                }
+            } else {
+                return redirect()->back()
+                    ->withErrors('Permission denied! You do not have permissions to do this action');
             }
         } catch (\Exception $e) {
 
@@ -65,9 +75,14 @@ class BrandController extends Controller
      */
     public function show($id)
     {
-        $brand = $this->brandRepo->findOrFail($id);
-        $products = Product::where('brand_id', $id)->orderBy('id', 'desc')->get();
-        return view('admin_def.pages.brand_show', compact('brand', 'products'));
+        $user = \Auth::user();
+        if ($user->can('view', Brand::class)) {
+            $brand = $this->brandRepo->findOrFail($id);
+            $products = Product::where('brand_id', $id)->orderBy('id', 'desc')->get();
+            return view('admin_def.pages.brand_show', compact('brand', 'products'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -90,10 +105,16 @@ class BrandController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $brand = $this->brandRepo->find($id);
-        $brand->fill($request->all());
-        if ($brand->save()) {
-            return redirect()->back();
+        $user = \Auth::user();
+        if ($user->can('update', Brand::class)) {
+            $brand = $this->brandRepo->find($id);
+            $brand->fill($request->all());
+            if ($brand->save()) {
+                return redirect()->back();
+            }
+        } else {
+            return redirect()->back()
+                ->withErrors('Permission denied! You do not have permissions to do this action');
         }
     }
 
@@ -105,13 +126,19 @@ class BrandController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::where('brand_id', $id)->get();
-        if (count($product) == 0) {
-            $delete = $this->brandRepo->find($id)->delete();
-            if ($delete) {
-                return redirect()->route('admin.brand.index');
+        $user = \Auth::user();
+        if ($user->can('delete', Brand::class)) {
+            $product = Product::where('brand_id', $id)->get();
+            if (count($product) == 0) {
+                $delete = $this->brandRepo->find($id)->delete();
+                if ($delete) {
+                    return redirect()->route('admin.brand.index');
+                }
             }
+            return redirect()->back();
+        } else {
+            return redirect()->back()
+                ->withErrors('Permission denied! You do not have permissions to do this action');
         }
-        return redirect()->back();
     }
 }

@@ -16,7 +16,7 @@ class AdminAuth
     public function handle($request, Closure $next)
     {
         if ($request->is('admin*') || $request->is('admin/*')) {
-            if ( (!\Auth::check() || (\Auth::check() && \Auth::user()->role_id < 2)) && !$request->is('admin/login')) {
+            if ( (!\Auth::check() || (\Auth::check() && ! \Auth::user()->isAdmin())) && !$request->is('admin/login')) {
                 return redirect()->route('admin.login')
                     ->withPermission('You dont have permission to access');
             }

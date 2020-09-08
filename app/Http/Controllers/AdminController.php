@@ -23,6 +23,10 @@ class AdminController extends Controller
 
     public function media()
     {
-        return view('admin_def.pages.media');
+        if (\Auth::user()->can('Create New Product', Product::class) || \Auth::user()->can('Update Product', Product::class)) {
+            return view('admin_def.pages.media');
+        } else {
+            return view403();
+        }
     }
 }

@@ -18,8 +18,13 @@ class ProductController extends Controller
      */
     public function index()
     {
-        $products = Product::with('brand:id,name')->orderBy('id', 'desc')->get();
-        return view('admin_def.pages.product_index', compact('products'));
+        $user = \Auth::user();
+        if ($user->can('viewAny', Product::class)) {
+            $products = Product::with('brand:id,name')->orderBy('id', 'desc')->get();
+            return view('admin_def.pages.product_index', compact('products'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -29,8 +34,13 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $brands = Brand::all();
-        return view('admin_def.pages.product_create', compact('brands'));
+        $user = \Auth::user();
+        if ($user->can('create', Product::class)) {
+            $brands = Brand::all();
+            return view('admin_def.pages.product_create', compact('brands'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -83,8 +93,13 @@ class ProductController extends Controller
      */
     public function show($id)
     {
-        $product = Product::find($id);
-        return view('admin_def.pages.product_show', compact('product'));
+        $user = \Auth::user();
+        if ($user->can('view', Product::class)) {
+            $product = Product::find($id);
+            return view('admin_def.pages.product_show', compact('product'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -95,9 +110,14 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::find($id);
-        $brands = Brand::all();
-        return view('admin_def.pages.product_edit', compact('product', 'brands'));
+        $user = \Auth::user();
+        if ($user->can('update', Product::class)) {
+            $product = Product::find($id);
+            $brands = Brand::all();
+            return view('admin_def.pages.product_edit', compact('product', 'brands'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -112,23 +132,30 @@ class ProductController extends Controller
         $request->validated();
         
         try {
+            $change_flag = false;
+            $product_flag = $image_flag = true;
             $product = Product::find($id);
             $request['properties'] = json_encode($request->properties);
+            
             $product->fill($request->all());
-            if ($product->save()) {
-                $image_flag = false;
-                foreach ($request->image as $key => $val) {
-                    $img = ProductImage::find($key);
-                    if ($img->image !== $val) {
-                        $image_flag = true; 
-                        $img->fill(['image' => $val])->save();
-                    }
-                }
-                //if ($image_flag) {
-                    return redirect()->route('admin.product.show', $product->id)
-                    ->withMessage('OK');
-                //}
+            if ($change_flag = $product->isDirty()) {
+                $product_flag = $product->save();
             }
+
+            foreach ($request->image as $key => $val) {
+                $img = ProductImage::find($key);
+                if ($img->image !== $val) {
+                    $change_flag = true;
+                    $image_flag = $img->fill(['image' => $val])->save();
+                }
+            }
+
+            if ($change_flag && $product_flag && $image_flag) {
+                return redirect()->route('admin.product.show', $product->id)
+                ->withMessage('OK');
+            }
+
+            return redirect()->back()->withErrors('No Change has been made');
         } catch (\Exception $e) {
             \Log::error("Error at " . __METHOD__ . ". Content: {$e->getMessage()}");
             return redirect()->back()->withErrors($e->getMessage());

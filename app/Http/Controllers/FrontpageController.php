@@ -145,8 +145,6 @@ class FrontpageController extends Controller
                 ->paginate(20)
                 ->appends([
                     'q' => $request->q,
-                    '_token' => $request->_token,
-                    '_method' => $request->_method,
                 ]);
             
             if (count($products) > 0) {
@@ -325,6 +323,5 @@ class FrontpageController extends Controller
         $user = Auth::user();
         $bill = $this->getOrderDetails($id);
         return view('frontpage_def.pages.user_bill_details', compact('user', 'bill'));
-
     }
 }

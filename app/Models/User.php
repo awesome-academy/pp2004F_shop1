@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Contracts\Auth\MustVerifyEmail;
+use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Notifications\Notifiable;
 
@@ -10,18 +11,26 @@ class User extends Authenticatable
 {
     use Notifiable;
 
+    use SoftDeletes;
+
     /**
      * The attributes that are mass assignable.
      *
      * @var array
      */
+    const ROLE = [
+        'unactived' => 1,
+        'default' => 2,
+        'superadmin' => 3,
+    ];
+
     protected $fillable = [
         'email',
         'password',
         'first_name',
         'last_name',
         'phone',
-        'email_verified_at',
+        'activated_at',
         'remember_token',
         'role_id',
         'address1',
@@ -44,16 +53,26 @@ class User extends Authenticatable
      * @var array
      */
     protected $casts = [
-        'email_verified_at' => 'datetime',
+        'activated_at' => 'datetime',
     ];
 
     public function getFullName()
     {
-        return ($this->last_name && $this->first_name) ? "{$this->last_name} {$this->first_name}" : null;
+        return ($this->last_name && $this->first_name) ? "{$this->last_name} {$this->first_name}" : '';
+    }
+
+    public function isAdmin()
+    {
+        return $this->role_id >= self::ROLE['superadmin'];
     }
 
     public function hasOrders()
     {
         return $this->hasMany(Order::class);
+    }
+
+    public function role()
+    {
+        return $this->belongsTo(Role::class);
     }
 }

@@ -18,9 +18,14 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::with('log:id,updated_at', 'orderedProducts:product_id', 'customer:id,first_name,last_name')
-            ->orderBy('id', 'desc')->get();
-        return view('admin_def.pages.order_index', compact('orders'));
+        $user = \Auth::user();
+        if ($user->can('viewAny', Order::class)) {
+            $orders = Order::with('log:id,updated_at', 'orderedProducts:product_id', 'customer:id,first_name,last_name')
+                ->orderBy('id', 'desc')->get();
+            return view('admin_def.pages.order_index', compact('orders'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -69,8 +74,13 @@ class OrderController extends Controller
      */
     public function show($id)
     {
-        $order = Order::with('orderedProducts')->findOrFail($id);
-        return view('admin_def.pages.order_show', compact('order'));
+        $user = \Auth::user();
+        if ($user->can('view', Order::class)) {
+            $order = Order::with('orderedProducts')->findOrFail($id);
+            return view('admin_def.pages.order_show', compact('order'));
+        } else {
+            return view403();
+        }
     }
 
     /**
@@ -82,7 +92,15 @@ class OrderController extends Controller
     public function edit($id)
     {
         $order = Order::findOrFail($id);
-        return view('admin_def.pages.order_edit', compact('order'));
+        $user = \Auth::user();
+        $user_can = [];
+        if ($user->can('updateAsShipper', Order::class)) {
+            array_push($user_can, Order::STT['on_shipping'], Order::STT['shipped']);
+        }
+        if ($user->can('updateAsAdmin', Order::class)) {
+            array_push($user_can, Order::STT['completed']);
+        }
+        return view('admin_def.pages.order_edit', compact('order', 'user_can'));
     }
 
     /**
@@ -94,27 +112,34 @@ class OrderController extends Controller
      */
     public function update(Request $request, $id)
     {
-        try {
-            $order = Order::find($id);
-            if ($request->status == $order->status || $order->status == Order::STT['completed']) {
-                return redirect()->route('admin.order.show', $id);
-            }
-            $order->fill($request->all());
-            $update = $order->save();
-            if ($update) {
-                if ($order->status == Order::STT['completed']) {
-                    $this->createBill($order);
+        $user = \Auth::user();
+        if (($user->can('updateAsShipper', Order::class) && 
+            ($request->status == Order::STT['on_shipping'] || $request->status == Order::STT['shipped']))
+            || ($user->can('updateAsAdmin', Order::class) && $request->status == Order::STT['completed'])
+            ) {
+            try {
+                $order = Order::find($id);
+                if ($request->status == $order->status || $order->status == Order::STT['completed']) {
+                    return redirect()->route('admin.order.show', $id);
                 }
-                $order->log()->create([
-                    'order_id' => $order->id,
-                    'user_id' => \Auth::user()->id,
-                    'event' => $request->status,
-                ]);
-                return redirect()->route('admin.order.show', $id);
+                $order->fill($request->all());
+                $update = $order->save();
+                if ($update) {
+                    if ($order->status == Order::STT['completed']) {
+                        $this->createBill($order);
+                    }
+                    $order->log()->create([
+                        'order_id' => $order->id,
+                        'user_id' => \Auth::user()->id,
+                        'event' => $request->status,
+                    ]);
+                    return redirect()->route('admin.order.show', $id);
+                }
+            } catch (\Exception $e) {
+                // return redirect()->back()->withErrors($e->getMessage());
             }
-        } catch (\Exception $e) {
-            // return redirect()->back()->withErrors($e->getMessage());
         }
+        return redirect()->back()->withErrors("Permission Denied! You do not have permission to do this action");
     }
 
     /**
