@@ -31,6 +31,7 @@
                             </li>
                             @endforeach
                             @endif
+                            @if (!empty($others))
                             <li class="dropdowned megamenu-static-holder"><a href="#">Others</a>
                                 <ul class="megamenu hb-megamenu">
                                     <div class="col-lg-2 col-md-12 col-12">
@@ -66,6 +67,7 @@
                                     </div>
                                 </ul>
                             </li>
+                            @endif
                             <li><a href="{{ url('about') }}">About Us</a></li>
                             <li><a href="{{ url('contact') }}">Contact</a></li>
                         </ul>

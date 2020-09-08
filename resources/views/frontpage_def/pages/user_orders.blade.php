@@ -33,7 +33,7 @@
                             @foreach ($orders as $order)
                                 <tr>
                                     <td>{{ $order->textStatus() }}</td>
-                                    <td>{{ number_format($order->getAmount()*1100, 0, ',', '.') }} VNĐ</td>
+                                    <td>{{ vnd_format($order->getAmount(true)) }} VNĐ</td>
                                     <td>{{ $order->created_at }}</td>
                                     <td class="text-right"><a href="{{ route('user.order.show', $order->id) }}" class="btn-sm"><small>View details</small></a></td>
                                 </tr>

@@ -54,7 +54,7 @@
                         </tr>
                         <tr>
                             <th scope="row">Activated at</th>
-                            <td>{{ $user->email_verified_at ?? '' }}</td>
+                            <td>{{ $user->activated_at ?? '' }}</td>
                         </tr>
                         <tr>
                             <th scope="row"><a href="{{ route('user.account.edit', $user->id) }}" class="btn-cart">Edit Profile</a></th>

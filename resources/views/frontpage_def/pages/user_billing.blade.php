@@ -33,7 +33,7 @@
                             @foreach ($bills as $bill)
                                 <tr>
                                     <td>{{ $bill->bill->check_number }}</td>
-                                    <td>{{ number_format($bill->getAmount() * 1100, 0, ',', '.') }} VNĐ</td>
+                                    <td>{{ vnd_format($bill->getAmount(true)) }} VNĐ</td>
                                     <td>{{ $bill->created_at }}</td>
                                     <td class="text-right"><a href="{{ route('user.bill.show', $bill->id) }}" class="btn-sm"><small>View details</small></a></td>
                                 </tr>

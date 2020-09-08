@@ -14,6 +14,12 @@ class AuthServiceProvider extends ServiceProvider
      */
     protected $policies = [
         // 'App\Model' => 'App\Policies\ModelPolicy',
+        \App\Models\User::class => \App\Policies\UserPolicy::class,
+        \App\Models\Role::class => \App\Policies\RolePolicy::class,
+        \App\Models\Product::class => \App\Policies\ProductPolicy::class,
+        \App\Models\Order::class => \App\Policies\OrderPolicy::class,
+        \App\Models\Bill::class => \App\Policies\BillPolicy::class,
+        \App\Models\Brand::class => \App\Policies\BrandPolicy::class,
     ];
 
     /**

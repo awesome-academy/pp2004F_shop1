@@ -83,7 +83,7 @@ Route::prefix('user')->as('user.')->group(function(){
 */
 
 Route::prefix('admin')->as('admin.')->middleware('auth.admin')->group(function(){
-    Route::fallback('AdminController@page404');
+    Route::fallback('AdminController@page404')->name('404');
 
     Route::get('login', 'AdminController@login');
 
@@ -91,7 +91,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth.admin')->group(function()
 
     Route::post('logout', 'Auth\LoginController@logout')->name('logout');
 
-    Route::get('/', 'AdminController@dashboard');
+    Route::get('/', 'AdminController@dashboard')->name('dashboard');
 
     Route::resource('product', 'ProductController');
 
@@ -103,11 +103,17 @@ Route::prefix('admin')->as('admin.')->middleware('auth.admin')->group(function()
 
     Route::get('user-admin/index', 'UserController@admin')->name('user.admin');
 
+    Route::match(['PUT', 'PATCH'], 'user/{id}/update-profile', 'UserController@updateProfile')->name('user.updateProfile');
+
     Route::resource('user', 'UserController');
+
+    Route::resource('role', 'RoleController');
 
     Route::get('media', 'AdminController@media');
 
     Route::group(['prefix' => 'filemanager', 'middleware' => ['web']], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
     });
+
+    Route::view('forbidden', 'admin_def.pages.403')->name('forbidden');
 });

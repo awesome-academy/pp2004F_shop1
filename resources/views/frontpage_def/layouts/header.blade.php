@@ -91,7 +91,7 @@
                                 <div class="hm-minicart-trigger">
                                     <span class="item-icon"></span>
                                     <span class="item-text">
-                                        <span class="cart-total">{{ (!empty($cart)) ? number_format($cart['total']*1000, 0, ',', '.') : 0 }}</span><sup> VNĐ</sup>
+                                        <span class="cart-total">{{ (!empty($cart)) ? vnd_format($cart['total']) : 0 }}</span><sup> VNĐ</sup>
                                         <span class="cart-item-count">@if(session()->has('cart') && count(session()->get('cart')) > 0) {{ count(session()->get('cart')) }} @endif</span>
                                     </span>
                                 </div>
@@ -101,7 +101,7 @@
                                     </ul>
                                     <p class="minicart-total">SUBTOTAL: 
                                         <span style="margin-left: 8px">VNĐ</span>
-                                        <span>{{ (!empty($cart)) ? number_format($cart['total']*1000, 0, ',', '.') : 0 }}</span>
+                                        <span>{{ (!empty($cart)) ? vnd_format($cart['total']) : 0 }}</span>
                                     </p>
                                     <div class="minicart-button">
                                         <a href="{{ url('cart') }}" class="li-button li-button-fullwidth li-button-dark">

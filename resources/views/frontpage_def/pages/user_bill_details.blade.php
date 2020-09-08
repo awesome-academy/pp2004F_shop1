@@ -65,11 +65,11 @@
                             </tr>
                             <tr>
                                 <th scope="row">Subtotal</th>
-                                <td>{{ number_format($bill->getAmount() * 1000, 0, ',', '.') }} VNĐ</td>
+                                <td>{{ vnd_format($bill->getAmount()) }} VNĐ</td>
                             </tr>
                             <tr>
                                 <th scope="row">Total (VAT required)</th>
-                                <td>{{ number_format($bill->getAmount() * 1100, 0, ',', '.') }} VNĐ</td>
+                                <td>{{ vnd_format($bill->getAmount(true)) }} VNĐ</td>
                             </tr>
                             <tr>
                                 <th colspan=2>
