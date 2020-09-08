@@ -7,7 +7,7 @@
             </div>
             <div class="pull-left info">
                 <p>{{ Auth::user()->getFullName() }}</p>
-                <a href="#"><i class="fa fa-circle text-success"></i>[{{ Auth::user()->role_id}}] Online</a>
+                <a href="#"><i class="fa fa-circle text-success"></i> Online</a>
             </div>
         </div>
         <ul class="sidebar-menu" data-widget="tree">
@@ -57,8 +57,9 @@
                     </span>
                 </a>
                 <ul class="treeview-menu">
-                    <li><a href="{{ route('admin.user.index') }}"><i class="fa fa-user"></i> Customers</a></li>
+                    <li><a href="{{ route('admin.user.index') }}"><i class="fa fa-user"></i> Users</a></li>
                     <li><a href="{{ route('admin.user.admin') }}"><i class="fa fa-user"></i> Admins</a></li>
+                    <li><a href="{{ route('admin.role.index') }}"><i class="fa fa-user"></i> Roles</a></li>
                 </ul>
             </li>
             <li @if(request()->is('admin/media')) class="active" @endif>

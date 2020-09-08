@@ -25,7 +25,7 @@
                                 <tr>
                                     <td>{{ $brand->name }}</td>
                                     <td></td>
-                                    <td>{{ number_format($brand->getTotalAmount()*1100, 0, ',', '.') }} VNĐ</td>
+                                    <td data-sort="{{ $brand->getTotalAmount(true) }}">{{ vnd_format($brand->getTotalAmount(true)) }} VNĐ</td>
                                     <td></td>
                                     <td>{{ $brand->getTotalSales() }}</td>
                                     <td>
@@ -38,26 +38,28 @@
                     </div>
                 </div>
             </div>
-            <div class="col-xs-12 col-md-3">
-                <div class="box box-default">
-                    <div class="box-header">
-                        <p class="lead">Add New Brand</p>
-                    </div>
-                    <div class="box-body">
-                        <form action="{{ route('admin.brand.store') }}" method="POST">
-                            @csrf
-                            @method('POST')
-                            <div class="form-group">
-                                <label for="" class="control-label">Brand Name</label>
-                                <input type="text" name="name" id="" class="form-control">
-                            </div>
-                            <div class="form-group">
-                                <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Add Brand</button>
-                            </div>
-                        </form>
+            @can('create', App\Models\Brand::class)
+                <div class="col-xs-12 col-md-3">
+                    <div class="box box-default">
+                        <div class="box-header">
+                            <p class="lead">Add New Brand</p>
+                        </div>
+                        <div class="box-body">
+                            <form action="{{ route('admin.brand.store') }}" method="POST">
+                                @csrf
+                                @method('POST')
+                                <div class="form-group">
+                                    <label for="" class="control-label">Brand Name</label>
+                                    <input type="text" name="name" id="" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <button type="submit" class="btn btn-success"><i class="fa fa-save"></i> Add Brand</button>
+                                </div>
+                            </form>
+                        </div>
                     </div>
                 </div>
-            </div>
+            @endcan
         </div>
     </div>
 @endsection

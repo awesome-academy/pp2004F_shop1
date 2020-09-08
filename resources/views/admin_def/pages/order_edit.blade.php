@@ -41,7 +41,8 @@
                                     <select name="status" class="form-control">
                                         <option value="">--- Please choose a status</option>
                                         @foreach($order::STT as $status)
-                                        <option value="{{ $status }}" @if($order->status == $status) {{ 'selected' }} @endif>{{ $order->textStatus($status) }}</option>
+                                        <option value="{{ $status }}" @if ($order->status == $status) {{ 'selected' }} @endif
+                                            {{ ! in_array($status, $user_can) ? "disabled" : 'class=text-green' }}>{{ $order->textStatus($status) }}</option>
                                         @endforeach
                                     </select>
                                     @endif
@@ -69,7 +70,7 @@
                                     @if ($order->status !== 8)
                                     <button type="submit" class="btn btn-warning"><i class="fa fa-save"></i> Update</button>
                                     @endif
-                                    <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-default"><i class="fa fa-refresh"></i> Back</a>
+                                    <a href="{{ route('admin.order.show', $order->id) }}" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i> Back</a>
                                 </td>
                             </tr>
                         </table>

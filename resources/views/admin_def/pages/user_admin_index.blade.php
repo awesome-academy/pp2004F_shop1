@@ -23,15 +23,17 @@
                         <tbody>
                             @foreach($users as $user)
                             <tr>
-                                <td>{{ !empty($user->getFullName()) ? $user->getFullName() : $user->username }}</td>
+                                <td><a href="{{ route('admin.user.show', $user->id) }}">
+                                        {{ !empty($user->getFullName()) ? $user->getFullName() : $user->username }}
+                                    </a>
+                                </td>
                                 <td>{{ $user->email }}</td>
                                 <td>{{ $user->phone ? $user->phone : "N/A" }}</td>
                                 <td>{{ $user->address ? $user->address : "N/A" }}</td>
-                                <td>{{ $user->email_verified_at ? $user->email_verified_at : 'Not Activated'}}</td>
-                                <td>{{ $user->role_id }}</td>
+                                <td>{{ $user->activated_at ? $user->activated_at : 'Not Activated'}}</td>
+                                <td>{{ $user->role->title }}</td>
                                 <td>
-                                    <a href="{{ route('admin.user.edit', $user->id) }}" class="btn btn-default"><i class="fa fa-edit"></i></a>
-                                    <a href="" class="btn btn-default"><i class="fa fa-trash"></i></a>
+                                    <a href="{{ route('admin.user.show', $user->id) }}" class="btn btn-default"><i class="fa fa-eye"></i></a>
                                 </td>
                             </tr>
                             @endforeach

@@ -26,8 +26,8 @@
                             <td>{{ $product->id }}</td>
                             <td><a href="{{ route('admin.product.show', $product->id) }}">{{ $product->name }}</a></td>
                             <td>{{ $product->brand->name }}</td>
-                            <td>{{ vnd_format($product->buy_price) }}</td>
-                            <td>{{ $product->vnd_format() }}</td>
+                            <td data-sort="{{ $product->buy_price }}">{{ vnd_format($product->buy_price) }}</td>
+                            <td data-sort="{{ $product->current_price }}">{{ $product->vnd_format() }}</td>
                             <td>fdsgdsf</td>
                             <td>fdsgdsf</td>
                             <td>

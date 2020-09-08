@@ -21,7 +21,7 @@
                         @foreach($bills as $bill)
                         <tr>
                             <td>{{ $bill->order->customer->getFullName() }}</td>
-                            <td>{{ number_format($bill->order->getAmount(true)*1000, 0, ',', '.') }} VNĐ</td>
+                            <td data-sort="{{ $bill->order->getAmount() }}">{{ vnd_format($bill->order->getAmount()) }} VNĐ</td>
                             <td>{{ $bill->check_number }}</td>
                             <td>{{ $bill->payment_date }}</td>
                             <td>

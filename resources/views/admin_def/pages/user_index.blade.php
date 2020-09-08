@@ -15,9 +15,9 @@
                                 <th>Email</th>
                                 <th width="140px">Phone</th>
                                 <th width="140px">Address</th>
-                                <th width="140px">Activated at</th>
+                                <th width="140px">Status</th>
                                 <th width="140px">Orders</th>
-                                <th width="150px">Successful payment</th>
+                                <th width="150px">Successful Orders</th>
                                 <th width="80px">Action</th>
                             </tr>
                         </thead>
@@ -29,7 +29,7 @@
                                 <td><a href="{{ route('admin.user.show', $user->id) }}">{{ $user->email }}</a></td>
                                 <td>{{ $user->phone ? $user->phone : "N/A" }}</td>
                                 <td>{{ $user->address ? $user->address : "N/A" }}</td>
-                                <td>{{ $user->email_verified_at ? $user->email_verified_at : 'Not Activated'}}</td>
+                                <td>{{ $user->activated_at ? $user->trashed() ? 'Banned' : 'Default Member' : 'Not Activated'}}</td>
                                 <td></td>
                                 <td></td>
                                 <td>

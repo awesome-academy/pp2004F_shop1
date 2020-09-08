@@ -21,17 +21,23 @@
 @endsection
 
 @section('content')
-    <form action="{{ route('admin.brand.destroy', $brand->id) }}" method="POST">
-        @csrf
-        @method('DELETE')
-        <input type="submit" value="" class="hidden" id="btn-brand-delete">
-    </form>
+    @can('delete', \App\Models\Brand::class)
+        <form action="{{ route('admin.brand.destroy', $brand->id) }}" method="POST">
+            @csrf
+            @method('DELETE')
+            <input type="submit" value="" class="hidden" id="btn-brand-delete">
+        </form>
+    @endcan
     <div class="col-xs-12">
         <h3>{{ $brand->name }}
             <span class="btn-group pull-right">
-                <a href="{{ route('admin.brand.index') }}" class="btn btn-default"><i class="fa fa-refresh"></i> Back</a>
-                <button class="btn btn-default" id="btn-brand-edit"><i class="fa fa-edit"></i> Edit</button>
-                <label for="btn-brand-delete" class="btn btn-default"><i class="fa fa-trash"></i> Delete</label>
+                <a href="{{ route('admin.brand.index') }}" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i> Back</a>
+                @can('update', \App\Models\Brand::class)
+                    <button class="btn btn-default" id="btn-brand-edit"><i class="fa fa-edit"></i> Edit</button>
+                @endcan
+                @can('delete', \App\Models\Brand::class)
+                    <label for="btn-brand-delete" class="btn btn-default"><i class="fa fa-trash"></i> Delete</label>
+                @endcan
             </span>
         </h3>
         <h4 style="margin-top: 20px">Details</h4>

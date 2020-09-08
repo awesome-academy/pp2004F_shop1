@@ -81,7 +81,7 @@
                                         </tr>
                                         <tr>
                                             <th><span class="lead"><strong>Total Amount</strong></span></th>
-                                            <td>{{ number_format($product->getTotalAmount(), 0, ',', '.') }} VNĐ</td>
+                                            <td>{{ vnd_format($product->getTotalAmount()) }} VNĐ</td>
                                         </tr>
                                         <tr>
                                             <td>
