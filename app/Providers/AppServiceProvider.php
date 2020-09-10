@@ -17,6 +17,10 @@ class AppServiceProvider extends ServiceProvider
             \App\Repositories\Brand\BrandRepositoryInterface::class,
             \App\Repositories\Brand\BrandRepository::class
         );
+        $this->app->singleton(
+            \App\Repositories\Contact\ContactRepositoryInterface::class,
+            \App\Repositories\Contact\ContactRepository::class
+        );
     }
 
     /**

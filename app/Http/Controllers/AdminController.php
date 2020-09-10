@@ -21,6 +21,16 @@ class AdminController extends Controller
         return view('admin_def.pages.login');
     }
 
+    public function contact()
+    {
+        return view('admin_def.pages.contact');
+    }
+
+    public function footer()
+    {
+        return view('admin_def.page.footer');
+    }
+
     public function media()
     {
         if (\Auth::user()->can('Create New Product', Product::class) || \Auth::user()->can('Update Product', Product::class)) {

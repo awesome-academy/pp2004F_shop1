@@ -45,22 +45,28 @@
                 <div class="contact-form-content pt-sm-55 pt-xs-55">
                     <h3 class="contact-page-title">Tell Us Your Message</h3>
                     <div class="contact-form">
-                        <form id="contact-form" action="http://demo.hasthemes.com/limupa-v3/limupa/mail.php" method="post">
+                        <form method="post" action="{{ route('contact_save') }}">
+                            @csrf
+                            @if (session('status'))
+                                <div class="alert alert-success">
+                                    {{ session('status') }}
+                                </div>
+                            @endif
                             <div class="form-group">
                                 <label>Your Name <span class="required">*</span></label>
-                                <input type="text" name="customerName" id="customername" required>
+                                <input type="text" name="name" id="customername" required>
                             </div>
                             <div class="form-group">
                                 <label>Your Email <span class="required">*</span></label>
-                                <input type="email" name="customerEmail" id="customerEmail" required>
+                                <input type="email" name="email" id="customerEmail" required>
                             </div>
                             <div class="form-group">
                                 <label>Subject</label>
-                                <input type="text" name="contactSubject" id="contactSubject">
+                                <input type="text" name="subject" id="contactSubject">
                             </div>
                             <div class="form-group mb-30">
                                 <label>Your Message</label>
-                                <textarea name="contactMessage" id="contactMessage"></textarea>
+                                <textarea name="message" id="contactMessage"></textarea>
                             </div>
                             <div class="form-group">
                                 <button type="submit" value="submit" id="submit" class="li-btn-3" name="submit">send</button>
@@ -71,6 +77,7 @@
                 </div>
             </div>
         </div>
+        </form>
     </div>
 </div>
 @endsection
@@ -91,7 +98,7 @@
             , scrollwheel: false,
             // The latitude and longitude to center the map (always required)
             center: new google.maps.LatLng(40.740610, -73.935242), // New York
-            // How you would like to style the map. 
+            // How you would like to style the map.
             // This is where you would paste any style found on
             styles: [{
                     "featureType": "water"
@@ -255,7 +262,7 @@
             ]
         };
 
-        // Get the HTML DOM element that will contain your map 
+        // Get the HTML DOM element that will contain your map
         // We are using a div with id="map" seen below in the <body>
         var mapElement = document.getElementById('google-map');
 

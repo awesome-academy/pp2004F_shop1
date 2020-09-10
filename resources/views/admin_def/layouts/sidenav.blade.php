@@ -62,6 +62,11 @@
                     <li><a href="{{ route('admin.role.index') }}"><i class="fa fa-user"></i> Roles</a></li>
                 </ul>
             </li>
+            <li @if(request()->is('admin/contact*')) class="active" @endif>
+                <a href="{{ route('admin.contact.index') }}">
+                    <small><i class="fa fa-mobile fa-2x"></i></small> <span> Contact</span>
+                </a>
+            </li>
             <li @if(request()->is('admin/media')) class="active" @endif>
                 <a href="{{ url('admin/media') }}">
                     <i class="fa fa-photo"></i>
