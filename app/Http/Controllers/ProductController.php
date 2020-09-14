@@ -172,4 +172,13 @@ class ProductController extends Controller
     {
         //
     }
+
+    public function media()
+    {
+        if (\Auth::user()->can('create', Product::class) || \Auth::user()->can('update', Product::class)) {
+            return view('admin_def.pages.media');
+        } else {
+            return view403();
+        }
+    }
 }

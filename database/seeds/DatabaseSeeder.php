@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             ->call(CommentSeeder::class)
             ->call(RoleSeeder::class)
             ->call(PermissionSeeder::class)
+            ->call(OptionSeeder::class)
             ;
     }
 }
