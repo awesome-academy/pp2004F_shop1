@@ -74,7 +74,7 @@
                 </a>
             </li>
             <li @if(request()->is('admin/options')) class="active" @endif>
-                <a href="#">
+                <a href="{{ route('admin.option.index') }}">
                     <i class="fa fa-gear"></i>
                     <span>Options</span>
                 </a>

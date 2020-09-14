@@ -31,5 +31,19 @@
     "battery.capa": "Battery Capacity",
     "battery.tech": "Technology",
     "others": "Others",
-    "others.date_debut": "Debut Date"
+    "others.date_debut": "Debut Date",
+    "general": "General",
+    "seo": "SEO",
+    "sitename": "Site name",
+    "title": "Title",
+    "description": "Description",
+    "keywords": "Keywords",
+    "main_logo": "Main Logo",
+    "white_logo": "White Logo",
+    "fav_icon": "Favourite Icon",
+    "default_lang": "Default Language",
+    "en": "English",
+    "jp": "Japanese",
+    "vi": "Vietnamese",
+    "menu": "Menu Navigation"
 }

@@ -37,6 +37,28 @@
                             <input type="text" class="form-control" name="last_name" value="{{ $user->last_name ?? '' }}">
                         </div>
                     </div>
+                    <div class="form-group row">
+                        <label for="" class="col-form-label col-4"><strong>Avatar</strong></label>
+                        <div class="col-8">
+                            <div class="input-group">
+                                <div class="input-group-btn">
+                                    <a id="lfm" data-input="thumbnail" data-preview="holder" class="btn btn-light">
+                                        <i class="fa fa-picture-o"></i> Choose
+                                    </a>
+                                </div>
+                                <input id="thumbnail" class="form-control" type="text" name="image" readonly
+                                    @if(!empty(old('image'))) value="{{ old('image') }}" @endif>
+                            </div>
+                            <div id="holder" style="margin-top:15px; max-height:100px;">
+                                @if(!empty(old('image'))) <img src="{{ old('image') }}" style="height: 6rem"> @endif
+                            </div>
+                            @error('image')
+                            <div class="help-block">
+                                {{ $errors->first('image') }}
+                            </div>
+                            @enderror
+                        </div>
+                    </div>
                     <div class="form-group row align-items-center">
                         <label for="" class="col-form-label col-4"><strong>Phone</strong></label>
                         <div class="col-8">
@@ -73,3 +95,19 @@
 </div>
 <!--Checkout Area End-->
 @endsection
+
+@push('styles')
+  <link rel="shortcut icon" type="image/png" href="{{ asset('vendor/laravel-filemanager/img/72px color.png') }}">
+@endpush
+
+@push('js')
+    <script src="{{ asset('vendor/ckeditor/ckeditor.js') }}"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js"></script>
+    <script>
+        {!! \File::get(base_path('vendor/unisharp/laravel-filemanager/public/js/stand-alone-button.js')) !!}
+    </script>
+     <script>
+        var route_prefix = "/filemanager";
+        $('#lfm').filemanager('image', {prefix: route_prefix});
+    </script>
+@endpush

@@ -63,7 +63,7 @@
                 <div class="col-lg-3">
                     <div class="logo pb-sm-30 pb-xs-30">
                         <a href="index.html">
-                            <img src="{{ asset('images/menu/logo/1.jpg') }}" alt="">
+                            <img src="{{ $options['main_logo'] }}" style="max-width: 100px">
                         </a>
                     </div>
                 </div>

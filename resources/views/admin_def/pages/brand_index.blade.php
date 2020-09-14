@@ -13,6 +13,7 @@
                             <thead>
                                 <tr>
                                     <th>Brand</th>
+                                    <th>Brand Code</th>
                                     <th>Amount last month</th>
                                     <th width="30%">Total Amount</th>
                                     <th>Sales last month</th>
@@ -23,7 +24,8 @@
                             <tbody>
                                 @foreach($brands as $brand)
                                 <tr>
-                                    <td>{{ $brand->name }}</td>
+                                    <td data-sort="{{ $brand->id }}">{{ $brand->name }}</td>
+                                    <td>{{ $brand->slug }}</td>
                                     <td></td>
                                     <td data-sort="{{ $brand->getTotalAmount(true) }}">{{ vnd_format($brand->getTotalAmount(true)) }} VNĐ</td>
                                     <td></td>
@@ -84,13 +86,14 @@
             'autoWidth'   : false,
             'columns'     : [
                 {orderable: true},
+                {orderable: false},
                 {orderable: true},
                 {orderable: true},
                 {orderable: true},
                 {orderable: true},
                 {orderable: false},
             ],
-            order: [1, 'desc'],
+            order: [0, 'asc'],
         });
     </script>
 @endpush

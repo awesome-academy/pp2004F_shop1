@@ -4,7 +4,7 @@
     <meta charset=" UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="csrf-token" content="{{ csrf_token() }}" />
-    <title>VAS @yield('title')</title>
+    <title>{{ $options['title'] ?? 'VAS' }} @yield('title')</title>
     @include('frontpage_def.layouts.head')
 </head>
 <body>
