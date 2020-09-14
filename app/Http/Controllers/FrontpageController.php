@@ -10,8 +10,11 @@ use App\Models\Brand;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
+use App\Models\Option;
 use App\Traits\CartTrait;
 use App\Traits\UserTrait;
+
+use function GuzzleHttp\json_decode;
 
 class FrontpageController extends Controller
 {
@@ -33,20 +36,30 @@ class FrontpageController extends Controller
             return $next($request);
         });
 
-        $menu = ['Apple', 'Samsung', 'Oppo', 'Vsmart'];
         $menuList = $brands = [];
-        foreach ($menu as $menu) {
-            $brand = Brand::where('name', $menu)->pluck('id');
-            array_push($brands, $brand->first());
-            $menu = strtolower($menu);
-            $products = Product::where('brand_id', $brand)->orderBy('id', 'desc')->take(18)->get();
-            if (count($products) > 0) {
-                $menuList[$menu] = $products;
+        $options = Option::where('parent_id', '<>', null)->get()->mapWithKeys(function($items){
+            return [$items->key => $items->value]; 
+        });
+
+        if (!empty($options['menu'])) {
+        $option_menu = json_decode($options['menu']);
+            if (!empty($option_menu)) {
+                $menu_items = array_keys(get_object_vars($option_menu));
+                foreach ($menu_items as $menu) {
+                    $brand = Brand::where('slug', $menu)->select('id', 'name')->first();
+                    array_push($brands, $brand->id);
+                    $products = Product::where('brand_id', $brand->id)->orderBy('id', 'desc')->take(18)->get();
+                    if (count($products) > 0) {
+                        $menuList[$brand->name] = $products;
+                    }
+                }
             }
         }
+
         $others = Brand::whereNotIn('id', $brands)->get();
         $menuList['others'] = Product::whereIn('brand_id', $others->pluck('id'))->orderBy('id', 'desc')->take(12)->get();
-        View::share(compact('menuList', 'others'));
+       
+        View::share(compact('menuList', 'others', 'options'));
     }
 
     public function home()

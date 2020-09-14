@@ -111,6 +111,20 @@ Route::prefix('admin')->as('admin.')->middleware('auth.admin')->group(function()
 
     Route::resource('role', 'RoleController');
 
+    Route::get('media', 'ProductController@media');
+
+    Route::get('option', 'OptionController@index')->name('option.index');
+
+    Route::get('option/edit', 'OptionController@edit')->name('option.edit');
+
+    Route::match(['PUT', 'PATCH'], 'option/update', 'OptionController@update')->name('option.update');
+
+    Route::post('option/store', 'OptionController@store')->name('option.store');
+
+    Route::get('option/{id}/alter', 'OptionController@alter')->name('option.alter');
+
+    Route::match(['PUT', 'PATCH'], 'option/{id}/save', 'OptionController@save')->name('option.save');
+
     Route::get('contact/index', 'ContactController@contact')->name('contact.index');
 
     Route::get('contact/{id}/show', 'ContactController@show')->name('contact.show');
