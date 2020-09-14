@@ -69,7 +69,7 @@
                     <!-- Begin Footer Logo Area -->
                     <div class="col-lg-4 col-md-6">
                         <div class="footer-logo">
-                            <img src="{{ asset('images/menu/logo/1.jpg') }}" alt="Footer Logo">
+                            <img src="{{ $options['main_logo'] }}" style="max-width: 150px">
                             <p class="info">
                                 Copyright&copy;2020 Awesome Academy.<br/>A Friendly Mobile Shop for Everyone 
                             </p>

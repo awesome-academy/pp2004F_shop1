@@ -11,7 +11,7 @@
                             </li>
                             @if (!empty($menuList))
                             @foreach ($menuList as $key => $menu)
-                            @if ($key === 'others') @break @endif
+                            @if ($key === 'others') @continue @endif
                             <li class="dropdowned megamenu-static-holder"><a>{{ $key }}</a>
                                 <ul class="row megamenu hb-megamenu">
                                     @foreach ($menu as $product)
