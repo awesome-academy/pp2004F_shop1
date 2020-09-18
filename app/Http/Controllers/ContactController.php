@@ -12,27 +12,13 @@ use Illuminate\Routing\Route;
 class ContactController extends Controller
 {
     protected $contactRepository;
+    
     public function __construct(ContactRepositoryInterface $contactRepository)
     {
         $this->contactRepository = $contactRepository;
-        $menu = ['Apple', 'Samsung', 'Oppo', 'Vsmart'];
-        $menuList = $brands = [];
-        foreach ($menu as $menu) {
-            $brand = Brand::where('name', $menu)->pluck('id');
-            array_push($brands, $brand->first());
-            $menu = strtolower($menu);
-            $products = Product::where('brand_id', $brand)->orderBy('id', 'desc')->take(18)->get();
-            if (count($products) > 0) {
-                $menuList[$menu] = $products;
-            }
-        }
-        $others = Brand::whereNotIn('id', $brands)->get();
-        $menuList['others'] = Product::whereIn('brand_id', $others->pluck('id'))->orderBy('id', 'desc')->take(12)->get();
-        \View::share(compact('menuList', 'others'));
     }
 
     public function index() {
-        //return view('frontpage_def.pages.contact');
         $contacts=Contact::all();
         return view('admin_def.pages.contact_index', compact('contacts'));
     }

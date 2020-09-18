@@ -13,7 +13,6 @@ use App\Models\Order;
 use App\Models\Option;
 use App\Traits\CartTrait;
 use App\Traits\UserTrait;
-
 use function GuzzleHttp\json_decode;
 
 class FrontpageController extends Controller
@@ -47,7 +46,9 @@ class FrontpageController extends Controller
                 $menu_items = array_keys(get_object_vars($option_menu));
                 foreach ($menu_items as $menu) {
                     $brand = Brand::where('slug', $menu)->select('id', 'name')->first();
-                    array_push($brands, $brand->id);
+                    if (!empty($brand)) {
+                        array_push($brands, $brand->id);
+                    }
                     $products = Product::where('brand_id', $brand->id)->orderBy('id', 'desc')->take(18)->get();
                     if (count($products) > 0) {
                         $menuList[$brand->name] = $products;
@@ -65,11 +66,11 @@ class FrontpageController extends Controller
     public function home()
     {
         $new_arrival = Product::orderBy('id', 'desc')->take(10)->get();
-        $products = Product::whereNotIn('id', $new_arrival->pluck('id'))->orderBy('id', 'desc')->paginate(12);
+        $products = Product::whereNotIn('id', $new_arrival->pluck('id'))->orderBy('id', 'desc')->paginate(24);
 
         $bs_orders = Order::where('status', Order::STT['completed'])->pluck('id');
         $bs_products = DB::table('order_details')
-            ->select(DB::RAW('product_id, sum(quantity_ordered) AS total'))
+            ->select('product_id', DB::RAW('product_id, sum(quantity_ordered) AS total'))
             ->whereIn('order_id', $bs_orders)
             ->groupBy('product_id')
             ->orderBy('total', 'desc')
@@ -168,121 +169,6 @@ class FrontpageController extends Controller
             }
         }
         return view('frontpage_def.pages.blank');
-    }
-
-    protected function getCartDetails()
-    {
-        $cart = session()->get('cart');
-        if (!empty($cart)) {
-            $products = Product::find($cart);
-            $total = $products->sum('current_price');
-            $quantity = session()->get('cart-quantity');
-            if (!empty($quantity)){
-                foreach ($quantity as $key => $value) {
-                    foreach($products as $product) {
-                        if ($product->id === $key) {
-                            $total += $product->current_price * ($value - 1);
-                        }
-                    }
-                }
-            }
-            return [
-                'count' => count($cart),
-                'total' => $total,
-            ];
-        } else {
-            return [
-                'count' => 0,
-                'total' => 0,
-            ];
-        }
-    }
-
-    public function ajaxProduct(Request $request)
-    {
-        $product = Product::find($request->product);
-        if ($product) {
-            $html = view('frontpage_def.partials.modal_product_preview')->with('product', $product)->render();
-            return response()->json([
-                'success' => true,
-                'html' => $html,
-            ]);
-        } else {
-            return false;
-        }
-    }
-
-    public function ajaxCart(Request $request)
-    {
-        $cart = session()->get('cart');
-        $products = Product::with('images')->find($cart);
-        $quantity = session()->get('cart-quantity');
-        if ($quantity) {
-            foreach ($quantity as $key => $value) {
-                foreach($products as $product) {
-                    if ($product->id === $key) {
-                        $product->quantity = $value;
-                    }
-                }
-            }
-        }
-        if ($products) {
-            return response()->json([
-                'success' => true,
-                'data' => $products,
-            ]);
-        } else {
-            return false;
-        }
-    }
-
-    public function ajaxAddCart(Request $request)
-    {
-        $cart = session()->get('cart');
-        if (empty($cart) || !in_array($request->product, $cart)) {
-            session()->push('cart', $request->product);
-        }
-        $cart = session()->get('cart');
-        if ($request->quantity || ( !empty($quantity = session()->get('cart-quantity')) 
-        && array_key_exists($request->product, $quantity)
-        && session()->get('cart-quantity')[$request->product] !== $request->quantity)) {
-            session()->put('cart-quantity.' . $request->product, $request->quantity);
-        }
-        if (in_array($request->product, $cart)) {
-            return response()->json([
-                'success' => true,
-                'data' => $this->getCartDetails(),
-            ]);
-        }
-    }
-
-    public function ajaxRemoveCart(Request $request)
-    {
-        $cart = session()->pull('cart', []);
-        $key = array_search($request->product, $cart);
-        if ($key !== false) {
-            unset($cart[$key]);
-        }
-        session()->put('cart', $cart);
-        $quantity = session()->pull('cart-quantity', []);
-        if (array_key_exists($request->product, $quantity)) {
-            unset($quantity[$request->product]);
-        }
-        session()->put('cart-quantity', $quantity);
-        if (!in_array($request->product, $cart)) {
-            return response()->json([
-                'success' => true,
-                'data' => $this->getCartDetails(),
-            ]);
-        }
-    }
-
-    public function ajaxEmptyCart()
-    {
-        $this->emptyCart();
-        if (empty(session()->get('cart'))) {
-            return response()->json(true);
-        }
     }
 
     public function userAccount()

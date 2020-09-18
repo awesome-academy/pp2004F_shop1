@@ -20,16 +20,6 @@ Route::get('brand/{id}', 'FrontpageController@brand');
 
 Route::get('product/{product}', 'FrontpageController@productDetails')->name('product.details');
 
-Route::get('product/{product}/ajax', 'FrontpageController@ajaxProduct');
-
-Route::get('cart/ajax', 'FrontpageController@ajaxCart');
-
-Route::get('cart/{product}/ajaxAdd/{quantity?}', 'FrontpageController@ajaxAddCart');
-
-Route::get('cart/{product}/ajaxRemove', 'FrontpageController@ajaxRemoveCart');
-
-Route::get('cart/ajaxEmpty', 'FrontpageController@ajaxEmptyCart');
-
 Route::get('about', 'FrontpageController@about');
 
 Route::get('contact', 'FrontpageController@contact')->name('contact_index');
@@ -53,6 +43,24 @@ Route::get('search', 'FrontpageController@search');
 Route::post('login', 'Auth\LoginController@login')->name('login');
 
 Route::get('logout', 'Auth\LoginController@logout')->name('logout');
+
+/*
+|--------------------------------------------------------------------------
+| Cart Route Group
+|--------------------------------------------------------------------------
+*/
+
+Route::prefix('cart')->as('cart.')->group(function(){
+    Route::get('product/{product}', 'CartController@ajaxProduct');
+
+    Route::get('get', 'CartController@ajaxCart');
+    
+    Route::get('ajaxAdd/{product}/{quantity?}', 'CartController@ajaxAddCart');
+    
+    Route::get('ajaxRemove/{product}', 'CartController@ajaxRemoveCart');
+    
+    Route::get('ajaxEmpty', 'CartController@ajaxEmptyCart');
+});
 
 /*
 |--------------------------------------------------------------------------
@@ -129,7 +137,7 @@ Route::prefix('admin')->as('admin.')->middleware('auth.admin')->group(function()
 
     Route::get('contact/{id}/show', 'ContactController@show')->name('contact.show');
 
-    Route::get('media', 'AdminController@media');
+    Route::get('media', 'ProductController@media');
 
     Route::group(['prefix' => 'filemanager', 'middleware' => ['web']], function () {
         \UniSharp\LaravelFilemanager\Lfm::routes();
