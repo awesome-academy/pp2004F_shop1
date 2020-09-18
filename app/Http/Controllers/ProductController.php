@@ -7,6 +7,7 @@ use App\Http\Requests\ProductStoreRequest;
 use App\Http\Requests\ProductUpdateRequest;
 use App\Models\Product;
 use App\Models\ProductImage;
+use App\Models\Order;
 use App\Models\Brand;
 
 class ProductController extends Controller
@@ -20,7 +21,24 @@ class ProductController extends Controller
     {
         $user = \Auth::user();
         if ($user->can('viewAny', Product::class)) {
-            $products = Product::with('brand:id,name')->orderBy('id', 'desc')->get();
+            $last_month = now()->subMonth()->format('m');
+            $orders = \DB::table('orders')
+                ->where('status', Order::STT['completed'])
+                ->whereMonth('created_at', $last_month)
+                ->pluck('id');
+            $products = \DB::table('order_details AS od')
+                ->whereIn('od.order_id', $orders->all())
+                ->rightJoin('products AS p', 'od.product_id', '=', 'p.id')
+                ->join('brands AS b', 'p.brand_id', '=', 'b.id')
+                ->select(
+                    'p.id', 'p.name', 'p.buy_price', 'p.current_price', 'p.brand_id',
+                    'b.name AS brand_name',
+                    \DB::RAW('
+                        SUM(od.quantity_ordered) AS sales_lm,
+                        SUM(od.quantity_ordered * od.price) AS amount_lm                    
+                    '))
+                ->groupBy('od.product_id')
+                ->paginate();
             return view('admin_def.pages.product_index', compact('products'));
         } else {
             return view403();
@@ -59,9 +77,9 @@ class ProductController extends Controller
             $product_flag = $product->save();
             $image_flag = true;
             if ($product_flag) {
-                if(str_contains($request->image, ',')) {
+                if (str_contains($request->image, ',')) {
                     $images = explode(',', $request->image);
-                    foreach($images as $value) {
+                    foreach ($images as $value) {
                         $image = new ProductImage();
                         $image->product_id = $product->id;
                         $image->image = $value;
@@ -130,13 +148,13 @@ class ProductController extends Controller
     public function update(ProductUpdateRequest $request, $id)
     {
         $request->validated();
-        
+
         try {
             $change_flag = false;
             $product_flag = $image_flag = true;
             $product = Product::find($id);
             $request['properties'] = json_encode($request->properties);
-            
+
             $product->fill($request->all());
             if ($change_flag = $product->isDirty()) {
                 $product_flag = $product->save();
@@ -152,7 +170,7 @@ class ProductController extends Controller
 
             if ($change_flag && $product_flag && $image_flag) {
                 return redirect()->route('admin.product.show', $product->id)
-                ->withMessage('OK');
+                    ->withMessage('OK');
             }
 
             return redirect()->back()->withErrors('No Change has been made');

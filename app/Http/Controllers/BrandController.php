@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Brand;
+use App\Models\Order;
 use App\Models\Product;
 use App\Repositories\Brand\BrandRepositoryInterface;
 
@@ -25,11 +26,39 @@ class BrandController extends Controller
     {
         $user = \Auth::user();
         if ($user->can('viewAny', Brand::class)) {
-            $brands = $this->brandRepo->orderBy('id', 'desc')->get();
+            $orders = Order::where('status', Order::STT['completed'])->pluck('id');
+            $lm = now()->submonth()->format('m');
+            $orders_lm = Order::where('status', Order::STT['completed'])
+                ->whereMonth('created_at', $lm)->pluck('id');
+
+            $total = $this->totalSales($orders);
+            $total_last_month = $this->totalSales($orders_lm, true);
+            $brands = \DB::table('brands AS b')
+                ->leftJoinSub($total, 'total', function ($join) {
+                    $join->on('b.id', '=', 'total.brand_id');
+                })
+                ->leftJoinSub($total_last_month, 'total_lm', function ($join) {
+                    $join->on('b.id', '=', 'total_lm.brand_id');
+                })
+                ->paginate();
             return view('admin_def.pages.brand_index', compact('brands'));
         } else {
             return view403();
         }
+    }
+
+    protected function totalSales($orders, $lm = false)
+    {
+        $lm = $lm === true ? '_lm' : '';
+        return \DB::table('order_details AS od')
+            ->whereIn('od.order_id', $orders)
+            ->join('products AS p', 'od.product_id', '=', 'p.id')
+            ->select(
+                'p.brand_id',
+                \DB::RAW("SUM(od.quantity_ordered) as quantity{$lm},
+                    SUM(od.quantity_ordered * od.price) AS amount{$lm}")
+            )
+            ->groupBy('p.brand_id');
     }
 
     /**
@@ -63,7 +92,6 @@ class BrandController extends Controller
                     ->withErrors('Permission denied! You do not have permissions to do this action');
             }
         } catch (\Exception $e) {
-
         }
     }
 
@@ -78,7 +106,19 @@ class BrandController extends Controller
         $user = \Auth::user();
         if ($user->can('view', Brand::class)) {
             $brand = $this->brandRepo->findOrFail($id);
-            $products = Product::where('brand_id', $id)->orderBy('id', 'desc')->get();
+            $orders_lm = Order::where('status', Order::STT['completed'])
+                ->whereMonth('created_at', now()->subMonth()->format('m'))
+                ->pluck('id');
+            $products = \DB::table('order_details AS od')
+                ->whereIn('order_id', $orders_lm)
+                ->rightJoin('products AS p', 'od.product_id', '=', 'p.id')
+                ->where('p.brand_id', $id)
+                ->select('p.*', \DB::RAW('
+                    SUM(od.quantity_ordered) AS sales_lm,
+                    SUM(od.quantity_ordered * od.price) AS amount_lm
+                '))
+                ->groupBy('od.product_id')
+                ->paginate();
             return view('admin_def.pages.brand_show', compact('brand', 'products'));
         } else {
             return view403();

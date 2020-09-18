@@ -52,7 +52,9 @@ if (! function_exists('render_option')) {
                         ";
                 break;
             case 7: // type = checkbox
-                $selected = get_object_vars(json_decode($option->value));
+                if (!empty($option->value)) {
+                    $selected = get_object_vars(json_decode($option->value));
+                }
                 foreach ($items as $item) {
                     $check_att = (!empty($selected) && in_array($item->value, $selected)) ? 'checked' : '';
                     echo    "<div class='col-xs-4'>

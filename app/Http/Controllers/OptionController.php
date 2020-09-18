@@ -45,7 +45,7 @@ class OptionController extends Controller
         if ($validator->fails()) {
             return redirect()->back()->withErrors($validator)->withInput();
         }
-
+        $request['parent_id'] = $request->option_group;
         $option = Option::create($request->all());
         if ($option) {
             return redirect()->route('admin.option.index');
@@ -75,7 +75,8 @@ class OptionController extends Controller
         $groups = $all->where('parent_id', null);
         $options = $all->whereNotIn('type', [1, 2]);
         $items = $all->where('type', 2);
-        return view('admin_def.pages.option_edit', compact('groups', 'options', 'items'));
+        $types = Option::TYPE;
+        return view('admin_def.pages.option_edit', compact('groups', 'options', 'items', 'types'));
     }
 
     /**
