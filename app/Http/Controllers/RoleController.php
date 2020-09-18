@@ -17,7 +17,7 @@ class RoleController extends Controller
     public function index()
     {
         if (\Auth::user()->can('manageRole', Role::class)) {
-            $roles = Role::withTrashed()->get();
+            $roles = Role::withTrashed()->paginate();
             return view('admin_def.pages.role_index', compact('roles'));
         } else {
             return view403();

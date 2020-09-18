@@ -24,12 +24,4 @@ class Option extends Model
         'select' => 6,
         'checkbox' => 7,
     ];
-
-    public function selected()
-    {
-        // if ($this->type == 6) {
-        //     return 'ok';
-        // }
-        // return null;
-    }
 }

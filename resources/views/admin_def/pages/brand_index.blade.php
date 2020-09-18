@@ -26,8 +26,8 @@
                                 <tr>
                                     <td data-sort="{{ $brand->id }}">{{ $brand->name }}</td>
                                     <td>{{ $brand->slug }}</td>
-                                    <td data-sort="{{ $brand->amount_lm }}">{{ vnd_format($brand->amount_lm) }}</td>
-                                    <td data-sort="{{ $brand->amount }}">{{ vnd_format($brand->amount) }}</td>
+                                    <td data-sort="{{ $brand->amount_lm }}">{{ vnd_format($brand->amount_lm, 1, 1100) }}</td>
+                                    <td data-sort="{{ $brand->amount }}">{{ vnd_format($brand->amount, 1, 1100) }}</td>
                                     <td>{{ $brand->quantity_lm ?? 0 }}</td>
                                     <td>{{ $brand->quantity ?? 0 }}</td>
                                     <td>

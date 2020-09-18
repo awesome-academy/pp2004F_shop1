@@ -22,7 +22,7 @@ class UserController extends Controller
     public function index()
     {
         if (\Auth::user()->can('viewAny', User::class)) {
-            $users = User::withTrashed()->where('role_id', '<', 3)->orderBy('id', 'desc')->get();
+            $users = User::withTrashed()->where('role_id', '<', 3)->orderBy('id', 'desc')->paginate();
             $user_type = 'Customer';
             return view('admin_def.pages.user_index', compact('users', 'user_type'));
         } else {
@@ -33,7 +33,7 @@ class UserController extends Controller
     public function admin()
     {
         if (\Auth::user()->can('viewAnyAdmin', User::class)) {
-            $users = User::where('role_id', '>=', 3)->get();
+            $users = User::where('role_id', '>=', 3)->paginate();
             $user_type = 'Admin';
             return view('admin_def.pages.user_admin_index', compact('users', 'user_type'));
         } else {
