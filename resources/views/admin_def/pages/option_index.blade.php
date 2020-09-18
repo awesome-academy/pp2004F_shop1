@@ -32,19 +32,24 @@
                             <tr>
                                 <th width="30%">{{ __($option->key) }}</th>
                                 <td>@if ($option->type == $types['image'])
-                                    <img src="{{ $option->value }}" class="img-thumbnail" style="max-width: 160px">
+                                    <img src="{{ !empty($option->value) ? $option->value : '' }}" class="img-thumbnail" style="max-width: 160px">
                                     @elseif ($option->type == $types['select'])
-                                        {{ $options->where('key', $option->value)->first()->value }}
-                                    @elseif ($option->type == 7)
+                                        @php
+                                            $selected = $options->where('key', $option->value)->first();
+                                        @endphp
+                                        {{ !empty($selected->value) ? $selected->value : '' }}
+                                    @elseif ($option->type == $types['checkbox'])
                                         @php
                                             $items = json_decode($option->value);
                                         @endphp
+                                        @if (!empty($items))
                                         <div class="row">
                                         @foreach($items as $key => $value)
                                             <div class="col-xs-4">
                                                 <i class="fa fa-check-square text-green"></i> {{ $value }}
                                             </div>
                                         @endforeach
+                                        @endif
                                         </div>
                                     @else
                                         {{ __($option->value) }}
@@ -86,19 +91,21 @@
                             <option value="">--- Choose an Option Type</option>
                             @if (!empty($types))
                                 @foreach ($types as $key_type => $type)
+                                @if ($type == 2) @continue @endif
                                 <option value="{{$type}}">{{ ucwords($key_type) }}</option>
                                 @endforeach
                             @endif
                         </select>
                     </div>
-                    <div class="form-group hidden">
+                    <div class="form-group">
                         <label for="" class="label-control">Choose an Option Group</label>
                         <select name="option_group" id="select-option-group" class="form-control">
                             <option value="">--- Choose an Option group</option>
                             @if (!empty($groups))
-                            @foreach ($groups as $group)
-                            <option value="{{ $group->id }}">{{ __($group->key) }}</option>
-                            @endforeach
+                                @foreach ($groups as $group)
+                                    @if ($group->id == 1) @continue @endif
+                                    <option value="{{ $group->id }}">{{ __($group->key) }}</option>
+                                @endforeach
                             @endif
                         </select>
                     </div>
@@ -117,11 +124,11 @@
         $(function(){
             $('#select-option-type').on('change', function(){
                 $selectOptionGroup = $('#select-option-group');
-                $selectOptionGroup.val(null);
                 if ($(this).val() == 1) {
-                    $selectOptionGroup.parent().removeClass('hidden');
-                } else {
+                    $selectOptionGroup.val(null);
                     $selectOptionGroup.parent().addClass('hidden');
+                } else {
+                    $selectOptionGroup.parent().removeClass('hidden');
                 }
             });
         });

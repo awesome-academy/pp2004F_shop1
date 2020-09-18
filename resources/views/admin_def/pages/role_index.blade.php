@@ -36,6 +36,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $roles->links() }}
                     </div>
                 </div>
             </div>
@@ -79,7 +80,7 @@
 @push('js')
     <script>
         $('#table-brands').DataTable({
-            'paging'      : true,
+            'paging'      : false,
             'lengthChange': false,
             'searching'   : true,
             'ordering'    : true,

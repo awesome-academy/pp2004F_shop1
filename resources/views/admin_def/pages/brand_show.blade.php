@@ -43,6 +43,27 @@
         <h4 style="margin-top: 20px">Details</h4>
         <div class="box box-warning">
             <div class="box-body">
+                <div class="row">
+                    <div class="col-xs-6">
+                        @php
+                            $total_sales_lm = $total_amount_lm = 0;
+                            foreach ($products as $product) {
+                                $total_sales_lm += $product->sales_lm;
+                                $total_amount_lm += $product->amount_lm;
+                            }                            
+                        @endphp
+                        <table class="table">
+                            <tr>
+                                <th width="30%">Sales Last Month</th>
+                                <td>{{ $total_sales_lm ?? 0 }}</td>
+                            </tr>
+                            <tr>
+                                <th>Amount Last Month</th>
+                                <td>{{ vnd_format($total_amount_lm, 1, 1100) }} VNĐ</td>
+                            </tr>
+                        </table>
+                    </div>
+                </div>
                 <table id="table-brand-details" class="table">
                     <thead>
                         <tr>
@@ -50,9 +71,7 @@
                             <th width="140px">Import Price (VNĐ)</th>
                             <th width="140px">Current Price (VNĐ)</th>
                             <th width="160px">Amount last month (VNĐ)</th>
-                            <th width="150px">Total Amount (VNĐ)</th>
                             <th width="150px">Sales last month</th>
-                            <th width="150px">Total sales</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -60,11 +79,9 @@
                         <tr>
                             <td><a href="{{ route('admin.product.show', $product->id) }}">{{ $product->name }}</a></td>
                             <td>{{ vnd_format($product->buy_price) }}</td>
-                            <td>{{ $product->vnd_format() }}</td>
-                            <td></td>
-                            <td>{{ vnd_format($product->getTotalAmount(), 1, 1100) }}</td>
-                            <td></td>
-                            <td>{{ $product->getTotalSales() }}</td>
+                            <td>{{ vnd_format($product->current_price, 1, 1100) }}</td>
+                            <td>{{ vnd_format($product->amount_lm, 1, 1100) }}</td>
+                            <td>{{ $product->sales_lm }}</td>
                         </tr>
                         @endforeach
                     </tbody>
@@ -87,15 +104,13 @@
 @push('js')
     <script>
         $('#table-brand-details').DataTable({
-            'paging'      : true,
+            'paging'      : false,
             'lengthChange': false,
             'searching'   : true,
             'ordering'    : true,
             'info'        : true,
             'autoWidth'   : false,
             'columns'     : [
-                {orderable: true},
-                {orderable: true},
                 {orderable: true},
                 {orderable: true},
                 {orderable: true},
