@@ -124,7 +124,7 @@
 @push('js')
     <script>
         $('#table-orders').DataTable({
-            'paging'      : true,
+            'paging'      : false,
             'lengthChange': false,
             'searching'   : false,
             'ordering'    : true,

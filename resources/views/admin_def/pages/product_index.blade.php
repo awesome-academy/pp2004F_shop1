@@ -3,6 +3,7 @@
 @section('title', '| Product List')
 
 @section('content')
+<div class="clearfix">
     <div class="col-xs-12">
         <h3>Product List</h3>
         <div class="box box-warning">
@@ -15,8 +16,8 @@
                             <th>Brand</th>
                             <th width="140px">Import Price (VNĐ)</th>
                             <th width="140px">Current Price (VNĐ)</th>
-                            <th width="150px">Sales last month</th>
-                            <th width="150px">Total sales</th>
+                            <th width="150px">Sales Last Month</th>
+                            <th width="180px">Amount Last Month (VNĐ)</th>
                             <th width="80px">Action</th>
                         </tr>
                     </thead>
@@ -25,11 +26,11 @@
                         <tr>
                             <td>{{ $product->id }}</td>
                             <td><a href="{{ route('admin.product.show', $product->id) }}">{{ $product->name }}</a></td>
-                            <td>{{ $product->brand->name }}</td>
+                            <td>{{ $product->brand_name }}</td>
                             <td data-sort="{{ $product->buy_price }}">{{ vnd_format($product->buy_price) }}</td>
-                            <td data-sort="{{ $product->current_price }}">{{ $product->vnd_format() }}</td>
-                            <td>fdsgdsf</td>
-                            <td>fdsgdsf</td>
+                            <td data-sort="{{ $product->current_price }}">{{ vnd_format($product->current_price, 1, 1100) }}</td>
+                            <td>{{ $product->sales_lm }}</td>
+                            <td data-sort="{{ $product->amount_lm }}">{{ vnd_format($product->amount_lm, 1, 1100) }}</td>
                             <td>
                                 <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-default"><i class="fa fa-edit"></i></a>
                                 <a href="" class="btn btn-default"><i class="fa fa-trash"></i></a>
@@ -38,9 +39,11 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{ $products->links() }}
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('lib-css')
@@ -55,7 +58,7 @@
 @push('js')
     <script>
         $('#table-products').DataTable({
-            'paging'      : true,
+            'paging'      : false,
             'lengthChange': false,
             'searching'   : true,
             'ordering'    : true,

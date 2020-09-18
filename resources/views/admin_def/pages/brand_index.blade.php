@@ -14,8 +14,8 @@
                                 <tr>
                                     <th>Brand</th>
                                     <th>Brand Code</th>
-                                    <th>Amount last month</th>
-                                    <th width="30%">Total Amount</th>
+                                    <th>Amount last month (VNĐ)</th>
+                                    <th width="30%">Total Amount (VNĐ)</th>
                                     <th>Sales last month</th>
                                     <th>Total Sales</th>
                                     <th width="50px">Action</th>
@@ -26,10 +26,10 @@
                                 <tr>
                                     <td data-sort="{{ $brand->id }}">{{ $brand->name }}</td>
                                     <td>{{ $brand->slug }}</td>
-                                    <td></td>
-                                    <td data-sort="{{ $brand->getTotalAmount(true) }}">{{ vnd_format($brand->getTotalAmount(true)) }} VNĐ</td>
-                                    <td></td>
-                                    <td>{{ $brand->getTotalSales() }}</td>
+                                    <td data-sort="{{ $brand->amount_lm }}">{{ vnd_format($brand->amount_lm) }}</td>
+                                    <td data-sort="{{ $brand->amount }}">{{ vnd_format($brand->amount) }}</td>
+                                    <td>{{ $brand->quantity_lm ?? 0 }}</td>
+                                    <td>{{ $brand->quantity ?? 0 }}</td>
                                     <td>
                                         <a href="{{ route('admin.brand.show', $brand->id) }}" class="btn btn-default"><i class="fa fa-eye"></i></a>
                                     </td>
@@ -37,6 +37,7 @@
                                 @endforeach
                             </tbody>
                         </table>
+                        {{ $brands->links() }}
                     </div>
                 </div>
             </div>
@@ -78,7 +79,7 @@
 @push('js')
     <script>
         $('#table-brands').DataTable({
-            'paging'      : true,
+            'paging'      : false,
             'lengthChange': false,
             'searching'   : true,
             'ordering'    : true,

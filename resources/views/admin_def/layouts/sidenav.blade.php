@@ -64,7 +64,7 @@
             </li>
             <li @if(request()->is('admin/contact*')) class="active" @endif>
                 <a href="{{ route('admin.contact.index') }}">
-                    <small><i class="fa fa-mobile fa-2x"></i></small> <span> Contact</span>
+                    <small><i class="fa fa-phone"></i></small> <span> Contact</span>
                 </a>
             </li>
             <li @if(request()->is('admin/media')) class="active" @endif>

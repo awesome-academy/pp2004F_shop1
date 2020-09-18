@@ -61,7 +61,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
     if ($t.hasClass("hm-minicart-trigger")) {
       $.ajax({
         type: "get",
-        url: base_url + "cart/ajax",
+        url: base_url + "cart/get",
         dataType: "json"
       })
         .done(function (result) {
@@ -582,7 +582,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
   /* 26. CUSTOM
 /*----------------------------------------*/
   function addCart($el) {
-    var url = base_url + "cart/" + $el.data("request") + "/ajaxAdd";
+    var url = base_url + "cart/ajaxAdd/" + $el.data("request");
     if ($el.hasClass("add-to-cart")) {
       var quantity = $el.prev().find(".cart-plus-minus-box").val();
       url += "/" + quantity;
@@ -625,7 +625,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
     }
     $.ajax({
       type: "get",
-      url: base_url + "cart/" + $parent.data("request") + "/ajaxRemove",
+      url: base_url + "cart/ajaxRemove/" + $parent.data("request"),
       dataType: "json"
     }).done(function (result) {
       if (result) {
@@ -727,7 +727,7 @@ Note: main.js, All Default Scripting Languages For This Theme Included In This F
 
   $(".quick-view-btn, .quick-view").click(function () {
     $.ajax({
-      url: base_url + "product/" + $(this).data("request") + "/ajax",
+      url: base_url + "cart/product/" + $(this).data("request"),
       type: "GET",
       dataType: "json",
     })

@@ -39,6 +39,7 @@
                             @endforeach
                         </tbody>
                     </table>
+                    {{ $users->links() }}
                 </div>
             </div>
         </div>
@@ -57,7 +58,7 @@
 @push('js')
     <script>
         $('#table-users').DataTable({
-            'paging'      : true,
+            'paging'      : false,
             'pageLength'  : 15,
             'lengthChange': false,
             'searching'   : true,

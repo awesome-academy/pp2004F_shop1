@@ -27,30 +27,6 @@
                     <div class="tab-content">
                         @if (!empty($groups))
                             @foreach ($groups as $group)
-                                @if ($loop->index == 0)
-                                    <div class="tab-pane{{ $loop->index == 0 ? ' active' : '' }}" id="tab_{{ $group->id }}">
-                                    <table class="table table-borderless">
-                                        <tbody>
-                                            <tr>
-                                                <th width="30%">Option Key</th>
-                                                <th>Value</th>
-                                            </tr>
-                                            @if (count($options) > 0)
-                                            @foreach($options as $option)
-                                                @php
-                                                    $option_items = ($option->type === 6 || $option->type === 7) ? $items->where('parent_id', $option->id) : null;
-                                                @endphp
-                                            <tr>
-                                                <td>{{ __($option->key) }}</td>
-                                                <td>{{ render_option($option, $option_items, null, null) }}</td>
-                                            </tr>
-                                            @endforeach
-                                            @endif
-                                        </tbody>
-                                    </table>
-                                </div>
-                                @continue
-                                @endif
                                 <div class="tab-pane{{ $loop->index == 0 ? ' active' : '' }}" id="tab_{{ $group->id }}">
                                     <table class="table table-borderless">
                                         <tbody>
@@ -58,13 +34,17 @@
                                                 <th width="30%">Option Key</th>
                                                 <th>Value</th>
                                             </tr>
-                                            @if (!empty($options))
-                                                @foreach ($options->where('option_group', $group->id) as $key => $option)
-                                                    <tr>
-                                                        <th>{{ __($option->key) }}</th>
-                                                        <td><input type="text" name="" class="form-control" value="{{ $group->value }}"></td>
-                                                    </tr>
-                                                @endforeach
+                                            @if (count($options) > 0)
+                                            @foreach($options->where('parent_id', $group->id) as $option)
+                                                @php
+                                                    $option_items = ($option->type === $types['select'] || $option->type === $types['checkbox']) 
+                                                        ? $items->where('parent_id', $option->id) : null;
+                                                @endphp
+                                            <tr>
+                                                <td>{{ __($option->key) }}</td>
+                                                <td>{{ render_option($option, $option_items, null, null) }}</td>
+                                            </tr>
+                                            @endforeach
                                             @endif
                                         </tbody>
                                     </table>

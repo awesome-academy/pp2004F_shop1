@@ -83,7 +83,7 @@
                                         <span style="margin-left: 8px">VNĐ</span>
                                         <span>{{ isset($product) ? vnd_format($cart['total']) : 0 }}</span>
                                     </li>
-                                    <li class="cart-total">Total 
+                                    <li class="cart-total">Total (10% VAT required)
                                         <span style="margin-left: 8px">VNĐ</span>
                                         <span>{{ isset($product) ? vnd_format($cart['total'], 1, 1100) : 0 }}</span>
                                     </li>

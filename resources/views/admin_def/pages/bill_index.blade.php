@@ -3,6 +3,7 @@
 @section('title', '| Bill List')
 
 @section('content')
+<div class="clearfix">
     <div class="col-xs-12">
         <h3>Bill List</h3>
         <div class="box box-warning">
@@ -31,9 +32,11 @@
                         @endforeach
                     </tbody>
                 </table>
+                {{ $bills->links() }}
             </div>
         </div>
     </div>
+</div>
 @endsection
 
 @push('lib-css')
@@ -48,7 +51,7 @@
 @push('js')
     <script>
         $('#table-bills').DataTable({
-            'paging'      : true,
+            'paging'      : false,
             'lengthChange': false,
             'searching'   : true,
             'ordering'    : true,

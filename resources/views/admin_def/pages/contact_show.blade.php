@@ -49,38 +49,3 @@
     </div>
     @include('admin_def.layouts.modal')
 @endsection
-
-@push('lib-css')
-    <link rel="stylesheet" href="{{ asset('vendor/datatables.net-bs/css/dataTables.bootstrap.min.css') }}">
-@endpush
-
-@push('lib-js')
-    <script src="{{ asset('vendor/datatables.net/js/jquery.dataTables.min.js') }}"></script>
-    <script src="{{ asset('vendor/datatables.net-bs/js/dataTables.bootstrap.min.js') }}"></script>
-@endpush
-
-@push('js')
-    <script>
-        $('#table-brand-details').DataTable({
-            'paging'      : true,
-            'lengthChange': false,
-            'searching'   : true,
-            'ordering'    : true,
-            'info'        : true,
-            'autoWidth'   : false,
-            'columns'     : [
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-            ],
-            order: [0, 'desc'],
-        });
-        $('#btn-brand-edit').click(function(){
-            $('.modal').modal('show');
-        });
-    </script>
-@endpush
