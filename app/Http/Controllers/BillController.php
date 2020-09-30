@@ -12,7 +12,7 @@ class BillController extends Controller
         $user = \Auth::user();
         if ($user->can('viewAny', Bill::class)) {
             $bills = Bill::with('order', 'order.orderedProducts', 'order.customer:id,first_name,last_name')
-                ->orderBy('id', 'desc')->paginate();
+                ->orderBy('payment_date', 'desc')->paginate();
             return view('admin_def.pages.bill_index', compact('bills'));
         } else {
             return view403();

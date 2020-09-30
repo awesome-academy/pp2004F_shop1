@@ -39,7 +39,7 @@ trait UserTrait {
         if (!empty($user)) {
             $bills = Order::where('customer_id', $user->id)->where('status', Order::STT['completed'])->orderBy('id', 'desc');
             if ($paginate === null) {
-                $bills = $bills->paginate(1);
+                $bills = $bills->paginate(20);
             }
             if ($paginate === false) {
                 $bills = $bills->take(20)->get();

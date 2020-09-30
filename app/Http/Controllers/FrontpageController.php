@@ -6,7 +6,6 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\View;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Brand;
 use App\Models\User;
 use App\Models\Product;
 use App\Models\Order;
@@ -40,33 +39,52 @@ class FrontpageController extends Controller
             return [$items->key => $items->value]; 
         });
 
+        $images = DB::table('product_images')
+            ->select('product_id', 'image')
+            ->whereRaw('id IN (SELECT min(id) AS id from product_images GROUP BY product_id)');
         if (!empty($options['menu'])) {
         $option_menu = json_decode($options['menu']);
             if (!empty($option_menu)) {
                 $menu_items = array_keys(get_object_vars($option_menu));
-                foreach ($menu_items as $menu) {
-                    $brand = Brand::where('slug', $menu)->select('id', 'name')->first();
-                    if (!empty($brand)) {
-                        array_push($brands, $brand->id);
-                    }
-                    $products = Product::where('brand_id', $brand->id)->orderBy('id', 'desc')->take(18)->get();
+                $brands = DB::table('brands')->whereIn('slug', $menu_items)->select('id', 'name')->get();
+                
+                foreach ($brands->all() as $menu) {
+                    $products = DB::table('products AS p')
+                        ->where('brand_id', $menu->id)
+                        ->joinSub($images, 'image', function($join) {
+                            $join->on('p.id', '=', 'image.product_id');
+                        })
+                        ->select('p.id', 'name', 'current_price', 'brand_id', 'image.image')
+                        ->orderBy('p.id', 'desc')
+                        ->take(12)
+                        ->get();
                     if (count($products) > 0) {
-                        $menuList[$brand->name] = $products;
+                        $menuList[$menu->name] = $products;
                     }
                 }
+                $others = DB::table('brands')->whereNotIn('slug', $menu_items)->get();
             }
+        } else {
+            $others = DB::table('brands')->get();
         }
 
-        $others = Brand::whereNotIn('id', $brands)->get();
-        $menuList['others'] = Product::whereIn('brand_id', $others->pluck('id'))->orderBy('id', 'desc')->take(12)->get();
+        $menuList['others'] = DB::table('products AS p')
+            ->whereIn('brand_id', $others->pluck('id'))
+            ->joinSub($images, 'image', function($join) {
+                $join->on('p.id', '=', 'image.product_id');
+            })
+            ->select('p.id', 'name', 'current_price', 'brand_id', 'image.image')
+            ->orderBy('p.id', 'desc')
+            ->take(12)
+            ->get();
        
         View::share(compact('menuList', 'others', 'options'));
     }
 
     public function home()
     {
-        $new_arrival = Product::orderBy('id', 'desc')->take(10)->get();
-        $products = Product::whereNotIn('id', $new_arrival->pluck('id'))->orderBy('id', 'desc')->paginate(24);
+        $new_arrival = Product::with('thumb', 'brand:id,name')->orderBy('id', 'desc')->take(10)->get();
+        $products = Product::with('thumb', 'brand:id,name')->whereNotIn('id', $new_arrival->pluck('id'))->orderBy('id', 'desc')->paginate(24);
 
         $bs_orders = Order::where('status', Order::STT['completed'])->pluck('id');
         $bs_products = DB::table('order_details')
@@ -76,20 +94,20 @@ class FrontpageController extends Controller
             ->orderBy('total', 'desc')
             ->take(10)
             ->get();
-        $best_sellers = Product::find($bs_products->pluck('product_id'));
+        $best_sellers = Product::with('thumb', 'brand:id,name')->find($bs_products->pluck('product_id'));
         return view('frontpage_def.pages.index', compact('products', 'best_sellers', 'new_arrival'));
     }
 
     public function brand($id)
     {
-        $products = Product::where('brand_id', $id)->paginate(12);
+        $products = Product::with('thumb', 'brand:id,name')->where('brand_id', $id)->paginate(12);
         return view('frontpage_def.pages.product_list', compact('products'));
     }
 
     public function productDetails($id)
     {
-        $product = Product::findOrFail($id);
-        $relates = Product::where('brand_id', $product->brand_id)->where('id', '<>', $product->id)->take(10)->get();
+        $product = Product::with('images', 'brand:id,name')->findOrFail($id);
+        $relates = Product::with('thumb', 'brand:id,name')->where('brand_id', $product->brand_id)->where('id', '<>', $product->id)->take(10)->get();
         return view('frontpage_def.pages.product_details', compact('product', 'relates'));
     }
 

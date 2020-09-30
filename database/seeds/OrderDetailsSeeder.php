@@ -12,15 +12,16 @@ class OrderDetailsSeeder extends Seeder
      */
     public function run(Faker $faker)
     {
-        $orders = DB::table('orders')->get();
+        $orders = \DB::table('orders')->get();
         foreach ($orders as $order) {
-            for ($i = 0; $i <= rand(1, 3); $i++) {
-                $product = $faker->randomElement(DB::table('products')->select('id', 'current_price')->get());
-                DB::table('order_details')->insert([
+            $max = (rand(1, 100) > 10) ? 1 : rand(2, 3);
+            for ($i = 0; $i <= $max; $i++) {
+                $product = $faker->randomElement(\DB::table('products')->select('id', 'current_price')->get());
+                \DB::table('order_details')->insert([
                     'product_id' => $product->id,
                     'order_id' => $order->id,
                     'price' => $product->current_price,
-                    'quantity_ordered' => $faker->numberBetween(1, 3),
+                    'quantity_ordered' => ($max == 1) ? 1 : rand(2, 3),
                 ]);
             }
         }

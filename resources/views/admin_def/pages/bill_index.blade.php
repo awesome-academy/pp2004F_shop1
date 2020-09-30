@@ -14,7 +14,7 @@
                             <th>Customer</th>
                             <th width="30%">Amount</th>
                             <th>Check Number</th>
-                            <th>Created At</th>
+                            <th>Payment Date</th>
                             <th>Action</th>
                         </tr>
                     </thead>
@@ -57,14 +57,7 @@
             'ordering'    : true,
             'info'        : true,
             'autoWidth'   : false,
-            'columns'     : [
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: false},
-            ],
-            order: [0, 'desc'],
+            'order'       : false,
         });
     </script>
 @endpush

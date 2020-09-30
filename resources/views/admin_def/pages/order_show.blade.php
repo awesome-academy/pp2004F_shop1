@@ -130,12 +130,7 @@
             'ordering'    : true,
             'info'        : false,
             'autoWidth'   : true,
-            'columns'     : [
-                {orderable: false},
-                {orderable: false},
-                {orderable: true},
-            ],
-            order: [2, 'desc'],
+            'order'       : false,
         });
     </script>
 @endpush

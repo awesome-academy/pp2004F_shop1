@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', 'FrontpageController@home')->name('homepage');
 
-Route::get('brand/{id}', 'FrontpageController@brand');
+Route::get('brand/{id}', 'FrontpageController@brand')->name('brand');
 
 Route::get('product/{product}', 'FrontpageController@productDetails')->name('product.details');
 

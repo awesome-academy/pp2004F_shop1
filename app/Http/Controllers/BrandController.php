@@ -55,7 +55,7 @@ class BrandController extends Controller
             ->join('products AS p', 'od.product_id', '=', 'p.id')
             ->select(
                 'p.brand_id',
-                \DB::RAW("SUM(od.quantity_ordered) as quantity{$lm},
+                \DB::RAW("SUM(od.quantity_ordered) as sales{$lm},
                     SUM(od.quantity_ordered * od.price) AS amount{$lm}")
             )
             ->groupBy('p.brand_id');
@@ -109,15 +109,18 @@ class BrandController extends Controller
             $orders_lm = Order::where('status', Order::STT['completed'])
                 ->whereMonth('created_at', now()->subMonth()->format('m'))
                 ->pluck('id');
-            $products = \DB::table('order_details AS od')
-                ->whereIn('order_id', $orders_lm)
-                ->rightJoin('products AS p', 'od.product_id', '=', 'p.id')
+            $products = \DB::table('products AS p')
+                ->leftJoin('order_details AS od', function($join) use ($orders_lm) {
+                    $join->on('od.product_id', '=', 'p.id')
+                        ->whereIn('od.order_id', $orders_lm->all());
+                })
                 ->where('p.brand_id', $id)
                 ->select('p.*', \DB::RAW('
                     SUM(od.quantity_ordered) AS sales_lm,
                     SUM(od.quantity_ordered * od.price) AS amount_lm
                 '))
-                ->groupBy('od.product_id')
+                ->groupBy('p.id')
+                ->orderBy('amount_lm', 'desc')
                 ->paginate();
             return view('admin_def.pages.brand_show', compact('brand', 'products'));
         } else {

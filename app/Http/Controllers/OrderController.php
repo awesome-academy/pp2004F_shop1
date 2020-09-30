@@ -21,7 +21,7 @@ class OrderController extends Controller
         $user = \Auth::user();
         if ($user->can('viewAny', Order::class)) {
             $orders = Order::with('log:id,updated_at', 'orderedProducts:product_id', 'customer:id,first_name,last_name')
-                ->orderBy('id', 'desc')->paginate();
+                ->where('status', '<>', Order::STT['completed'])->orderBy('created_at', 'desc')->paginate();
             return view('admin_def.pages.order_index', compact('orders'));
         } else {
             return view403();
