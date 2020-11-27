@@ -55,21 +55,17 @@
                                             <th>Excerpt</th>
                                             <td>{{ $product->excerpt }}</td>
                                         </tr>
-                                        {{-- <tr>
-                                            <th>Description</th>
-                                            <td>{!! $product->description !!}</td>
-                                        </tr> --}}
                                         <tr>
                                             <th>Brand</th>
                                             <td>{{ $product->brand->name }}</td>
                                         </tr>
                                         <tr>
                                             <th>Import Price</th>
-                                            <td>{{ $product->buy_price }}.000 VNĐ</td>
+                                            <td>{{ vnd_format($product->buy_price) }} VNĐ</td>
                                         </tr>
                                         <tr>
                                             <th>Current price</th>
-                                            <td>{{ $product->current_price }}.000 VNĐ</td>
+                                            <td>{{ vnd_format($product->current_price) }} VNĐ</td>
                                         </tr>
                                         <tr>
                                             <th>Sale Off</th>

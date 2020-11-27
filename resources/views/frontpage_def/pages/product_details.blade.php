@@ -40,7 +40,9 @@
                 <div class="product-details-view-content pt-60">
                     <div class="product-info">
                         <h2>{{ $product->name }}</h2>
-                        <span class="product-details-ref">Product by: <strong style="font-size: 1.2em">{{ $product->brand->name }}</strong></span>
+                        <span class="product-details-ref">Product by: 
+                            <strong style="font-size: 1.2em"><a href="{{ route('brand', $product->brand_id) }}">{{ $product->brand->name }}</a></strong>
+                        </span>
                         <div class="rating-box pt-20">
                             <ul class="rating rating-with-review-item">
                                 <li><i class="fa fa-star-o"></i></li>

@@ -11,7 +11,6 @@
                 <table id="table-products" class="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Product Name</th>
                             <th>Brand</th>
                             <th width="140px">Import Price (VNĐ)</th>
@@ -24,13 +23,12 @@
                     <tbody>
                         @foreach($products as $product)
                         <tr>
-                            <td>{{ $product->id }}</td>
                             <td><a href="{{ route('admin.product.show', $product->id) }}">{{ $product->name }}</a></td>
                             <td>{{ $product->brand_name }}</td>
                             <td data-sort="{{ $product->buy_price }}">{{ vnd_format($product->buy_price) }}</td>
                             <td data-sort="{{ $product->current_price }}">{{ vnd_format($product->current_price, 1, 1100) }}</td>
-                            <td>{{ $product->sales_lm }}</td>
-                            <td data-sort="{{ $product->amount_lm }}">{{ vnd_format($product->amount_lm, 1, 1100) }}</td>
+                            <td>{{ $product->sales_lm ?? 0 }}</td>
+                            <td data-sort="{{ $product->amount_lm }}">{{ vnd_format($product->amount_lm, 1, 1100) ?? 0 }}</td>
                             <td>
                                 <a href="{{ route('admin.product.edit', $product->id) }}" class="btn btn-default"><i class="fa fa-edit"></i></a>
                                 <a href="" class="btn btn-default"><i class="fa fa-trash"></i></a>
@@ -64,17 +62,7 @@
             'ordering'    : true,
             'info'        : true,
             'autoWidth'   : false,
-            'columns'     : [
-                {orderable: true, visible: false},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: false},
-            ],
-            order: [0, 'desc'],
+            'order'       : false,
         });
     </script>
 @endpush

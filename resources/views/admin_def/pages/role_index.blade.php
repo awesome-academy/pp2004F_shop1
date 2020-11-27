@@ -86,14 +86,7 @@
             'ordering'    : true,
             'info'        : true,
             'autoWidth'   : false,
-            'columns'     : [
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: false},
-            ],
-            order: [0, 'desc'],
+            'order'       : false,
         });
     </script>
 @endpush

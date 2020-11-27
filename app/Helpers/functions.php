@@ -7,6 +7,12 @@ if (! function_exists('vnd_format')) {
     }
 }
 
+if (! function_exists('getThumb')) {
+    function getThumb($src) {
+        return preg_replace('#(.*)(\/)(.*)$#', '$1/thumbs/$3', $src);
+    }
+}
+
 if (! function_exists('view403')) {
     function view403()
     {

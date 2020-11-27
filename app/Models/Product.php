@@ -44,10 +44,15 @@ class Product extends Model
         return $this->hasMany(ProductImage::class);
     }
 
+    public function thumb()
+    {
+        return $this->hasOne(ProductImage::class);
+    }
+
     public function getThumb($src = null)
     {
-        if ($src === null && count($this->images) > 0) {
-            $src = $this->images->first()->image;
+        if ($src === null && !empty($this->thumb)) {
+            $src = $this->thumb->image;
         }
         return preg_replace('#(.*)(\/)(.*)$#', '$1/thumbs/$3', $src);
     }

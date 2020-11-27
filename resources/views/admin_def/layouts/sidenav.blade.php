@@ -31,17 +31,17 @@
             <li @if(request()->is('admin/order*')) class="active" @endif>
                 <a href="{{ route('admin.order.index') }}">
                     <i class="fa fa-truck"></i> <span>Orders</span>
-                    <span class="pull-right-container">
+                    {{-- <span class="pull-right-container">
                         <span class="label label-primary pull-right">4</span>
-                    </span>
+                    </span> --}}
                 </a>
             </li>
             <li @if(request()->is('admin/bill*')) class="active" @endif>
                 <a href="{{ route('admin.bill.index') }}">
                     <i class="fa fa-credit-card"></i> <span>Bills</span>
-                    <span class="pull-right-container">
+                    {{-- <span class="pull-right-container">
                         <span class="label label-primary pull-right">4</span>
-                    </span>
+                    </span> --}}
                 </a>
             </li>
             <li @if(request()->is('admin/brand*')) class="active" @endif>

@@ -18,11 +18,11 @@
                                         <div class="col-lg-4 col-md-6 col-12 mb-20">
                                             <div class="row">
                                                 <div class="col-3">
-                                                    <a href="{{ url('product/' . $product->id) }}"><img src="{{ $product->getThumb() }}" class="img"></a>
+                                                <a href="{{ url('product/' . $product->id) }}"><img src="{{ getThumb($product->image) }}" class="img"></a>
                                                 </div>
                                                 <a href="{{ url('product/' . $product->id) }}" class="pt-10">
                                                     <span>{{ $product->name }}</span>
-                                                    <p style="font-size: 0.9em">{{ $product->vnd_format() }} VNĐ</p>
+                                                    <p style="font-size: 0.9em">{{ vnd_format($product->current_price) }} VNĐ</p>
                                                 </a>
                                             </div>
                                         </div>
@@ -54,11 +54,11 @@
                                                 <div class="col-lg-4 col-md-6 col-12 mb-20">
                                                     <div class="row">
                                                         <div class="col-4">
-                                                            <a href="{{ url('product/' . $product->id) }}"><img src="{{ $product->getThumb() }}" class="img"></a>
+                                                            <a href="{{ url('product/' . $product->id) }}"><img src="{{ getThumb($product->image) }}" class="img"></a>
                                                         </div>
                                                         <a href="{{ url('product/' . $product->id) }}" class="pt-10">
                                                             <span>{{ $product->name }}</span>
-                                                            <p style="font-size: 0.9em">{{ $product->vnd_format() }} VNĐ</p>
+                                                            <p style="font-size: 0.9em">{{ vnd_format($product->current_price) }} VNĐ</p>
                                                         </a>
                                                     </div>
                                                 </div>

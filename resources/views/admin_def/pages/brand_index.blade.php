@@ -14,10 +14,10 @@
                                 <tr>
                                     <th>Brand</th>
                                     <th>Brand Code</th>
-                                    <th>Amount last month (VNĐ)</th>
-                                    <th width="30%">Total Amount (VNĐ)</th>
                                     <th>Sales last month</th>
+                                    <th>Amount last month (VNĐ)</th>
                                     <th>Total Sales</th>
+                                    <th width="30%">Total Amount (VNĐ)</th>
                                     <th width="50px">Action</th>
                                 </tr>
                             </thead>
@@ -26,10 +26,10 @@
                                 <tr>
                                     <td data-sort="{{ $brand->id }}">{{ $brand->name }}</td>
                                     <td>{{ $brand->slug }}</td>
-                                    <td data-sort="{{ $brand->amount_lm }}">{{ vnd_format($brand->amount_lm) }}</td>
-                                    <td data-sort="{{ $brand->amount }}">{{ vnd_format($brand->amount) }}</td>
-                                    <td>{{ $brand->quantity_lm ?? 0 }}</td>
-                                    <td>{{ $brand->quantity ?? 0 }}</td>
+                                    <td>{{ $brand->sales_lm ?? 0 }}</td>
+                                    <td data-sort="{{ $brand->amount_lm }}">{{ vnd_format($brand->amount_lm, 1, 1100) ?? 0 }}</td>
+                                    <td>{{ $brand->sales ?? 0 }}</td>
+                                    <td data-sort="{{ $brand->amount }}">{{ vnd_format($brand->amount, 1, 1100) ?? 0 }}</td>
                                     <td>
                                         <a href="{{ route('admin.brand.show', $brand->id) }}" class="btn btn-default"><i class="fa fa-eye"></i></a>
                                     </td>
@@ -94,7 +94,7 @@
                 {orderable: true},
                 {orderable: false},
             ],
-            order: [0, 'asc'],
+            order: [3, 'desc'],
         });
     </script>
 @endpush

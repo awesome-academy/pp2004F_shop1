@@ -26,9 +26,11 @@ class ProductController extends Controller
                 ->where('status', Order::STT['completed'])
                 ->whereMonth('created_at', $last_month)
                 ->pluck('id');
-            $products = \DB::table('order_details AS od')
-                ->whereIn('od.order_id', $orders->all())
-                ->rightJoin('products AS p', 'od.product_id', '=', 'p.id')
+            $products = \DB::table('products AS p')
+                ->leftJoin('order_details AS od', function($join) use ($orders) {
+                    $join->on('od.product_id', '=', 'p.id')
+                        ->whereIn('od.order_id', $orders->all());
+                })
                 ->join('brands AS b', 'p.brand_id', '=', 'b.id')
                 ->select(
                     'p.id', 'p.name', 'p.buy_price', 'p.current_price', 'p.brand_id',
@@ -37,7 +39,8 @@ class ProductController extends Controller
                         SUM(od.quantity_ordered) AS sales_lm,
                         SUM(od.quantity_ordered * od.price) AS amount_lm                    
                     '))
-                ->groupBy('od.product_id')
+                ->groupBy('p.id')
+                ->orderBy('amount_lm', 'desc')
                 ->paginate();
             return view('admin_def.pages.product_index', compact('products'));
         } else {

@@ -86,18 +86,21 @@
                                                 <button type="submit" name="action" value="active" class="btn btn-success">
                                                     <i class="fa fa-key"></i> Active Member
                                                 </button>
-                                            @endif
-                                                <button type="submit" name="action" value="change-role" class="btn btn-primary">
-                                                    <i class="fa fa-save"></i> Update Role
-                                                </button>
-                                            @if ($user->trashed())
-                                                <button type="submit" name="action" value="restore" class="btn btn-success">
-                                                    <i class="fa fa-refresh"></i> Restore Member
-                                                </button>
-                                            @else 
-                                                <button type="submit" name="action" value="ban" class="btn btn-warning">
-                                                    <i class="fa fa-ban"></i> Ban Member
-                                                </button>
+                                            @else
+                                                @if ($user->can('update', User::class) || $user->id != Auth::user()->id)
+                                                    <button type="submit" name="action" value="change-role" class="btn btn-primary">
+                                                        <i class="fa fa-save"></i> Update Role
+                                                    </button>
+                                                    @if ($user->trashed())
+                                                        <button type="submit" name="action" value="restore" class="btn btn-success">
+                                                            <i class="fa fa-refresh"></i> Restore Member
+                                                        </button>
+                                                    @else 
+                                                        <button type="submit" name="action" value="ban" class="btn btn-warning">
+                                                            <i class="fa fa-ban"></i> Ban Member
+                                                        </button>
+                                                    @endif
+                                                @endif
                                             @endif
                                             <a href="javascript: history.back()" class="btn btn-default"><i class="fa fa-arrow-circle-left"></i> Back</a>
                                         </td>

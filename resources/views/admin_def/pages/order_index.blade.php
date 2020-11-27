@@ -11,7 +11,6 @@
                 <table id="table-orders" class="table">
                     <thead>
                         <tr>
-                            <th>ID</th>
                             <th>Customer</th>
                             <th>Status</th>
                             <th width="30%">Amount</th>
@@ -23,7 +22,6 @@
                     <tbody>
                         @foreach($orders as $order)
                         <tr>
-                            <td></td>
                             <td>{{ $order->customer->getFullName() }}</td>
                             <td data-sort="{{ $order->status }}">{{ $order->textStatus() }}</td>
                             <td data-sort="{{ $order->getAmount(true) }}">{{ vnd_format($order->getAmount(true)) }} VNĐ</td>
@@ -62,16 +60,7 @@
             'ordering'    : true,
             'info'        : true,
             'autoWidth'   : false,
-            'columns'     : [
-                {orderable: true, visible: false},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: true},
-                {orderable: false},
-            ],
-            order: [0, 'desc'],
+            'order'       : false,
         });
     </script>
 @endpush

@@ -1,6 +1,6 @@
     <meta name="description" content="{{ $options['description'] ?? '' }}">
     <meta name="keywords" content="{{ $options['keywords'] ?? '' }}">
-    <link rel="shortcut icon" type="image/x-icon" href="{{ $options['fav_icon'] }}">
+    <link rel="shortcut icon" type="image/x-icon" href="{{ $options['fav_icon'] ?? '' }}">
     <link rel="stylesheet" href="{{ asset('css/material-design-iconic-font.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/font-awesome.min.css') }}">
     <link rel="stylesheet" href="{{ asset('css/fontawesome-stars.css') }}">
